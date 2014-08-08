@@ -2,17 +2,17 @@
 
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "com.logicup.gpstrack"
+        id        = "uk.co.coachclick"
         version   = "1.0.0">
 
-    <name>Gps Track</name>
+    <name>Coach Click Tracker</name>
 
     <description>
-        Gps Tracking App
+        Coach Click Tracker
     </description>
 
-    <author href="http://logicupsolutions.com" email="admin@logicupsolutions.com">
-        LogicUp Team
+    <author href="http://www.coachclick.co.uk" email="info@coachclick.co.uk">
+        Coach Click
     </author>
 
     <gap:platform name="ios" />
