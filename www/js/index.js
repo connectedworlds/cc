@@ -56,8 +56,10 @@ var app = {
     },
     initView: function() {
         if (this.passcode === null) {
-            $("#statusPage").show();
-        }
+            $("#settingsPage").show();
+        } else {
+			$("#logButton").show();
+		}
     },
     checkConnection: function() {
         var networkState = navigator.connection.type;
