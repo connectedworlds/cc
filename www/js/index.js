@@ -9,7 +9,7 @@ deviceInfo = {
 var app = {
     SERVER_LOGIN_URL: "http://www.coachclick.co.uk/app/login.php",
     HIGH_GPS_ACCURACY: true, // some emulators require true.
-
+	
     position: null,
     deviceId: 0,
     passcode: 0,
@@ -25,7 +25,7 @@ var app = {
         this.initPasscode();
         this.initView();
         app.timeLastSubmit = (new Date().getTime() / 1000) - 60;
-		var permanentStorage = window.localStorage;
+		
     },
     bindEvents: function() {
 //        document.addEventListener("pause", onPause, false);
@@ -36,7 +36,7 @@ var app = {
         }, false);
     },
     initUserId: function() {
-        
+        var permanentStorage = window.localStorage;
         this.deviceId = permanentStorage.getItem("deviceId");
         if (this.deviceId === null) {
             permanentStorage.setItem("deviceId", Math
@@ -45,7 +45,7 @@ var app = {
         }
     },
     initPasscode: function() {
-        // var permanentStorage = window.localStorage;
+        var permanentStorage = window.localStorage;
         this.passcode = permanentStorage.getItem("passcode");
         var passcodeText = '';
         if (this.passcode === null) {
@@ -142,6 +142,7 @@ $(function() {
 });
 
 app.doLogin = function() {
+	var permanentStorage = window.localStorage;
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
 //    if (app.position != undefined && app.position != null) {
