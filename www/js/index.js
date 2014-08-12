@@ -97,7 +97,10 @@ function checkConnection() {
 	} else {
 		pc = true;
 		$('#connectionType').text('PC');
+		connectionSpeed = 'Ethernet';
 	}
+	
+	console.log('Connection '+connectionSpeed);
 	
 }
 
@@ -117,6 +120,7 @@ function checkUnsent() {
 		}
 	}
 	$('#gpsUnsent').text(synctext);
+	console.log('Unsent '+synctext);
 	return tosync;
 }
 

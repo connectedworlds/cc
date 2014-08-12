@@ -52,16 +52,14 @@
 				 </div><!-- /content -->
             </div><!-- /page  -->
 
-            <!--
+            
 			<div id="logPage" class="content_div">
                 <div data-role="content" >
-                    <div>
-                        List of timestamp gathered.
-                        <ol id="gpsGatheringLog"></ol>
+                    <div id="debugDiv">
                     </div>
                 </div>
             </div>
-			-->
+			
 			
             <div id="privacyPage" class="content_div">
                 <div data-role="content" >
@@ -79,7 +77,7 @@
                     <ul>
                         <li><a id="trackingButton" href="#" data-href="trackingPage" data-icon="nb-status" class="ui-btn-active">Tracking</a></li>
                         <li><a id="settingsButton" href="#" data-href="settingsPage" data-icon="nb-status" >Settings</a></li>
-						<!-- <li><a id="logButton" href="#" data-href="logPage" data-icon="nb-status">Tracking</a></li> -->
+						<li><a id="logButton" href="#" data-href="logPage" data-icon="nb-status">Debug</a></li>
                         <li><a id="privacyButton" href="#" data-href="privacyPage" data-icon="nb-privacy">About</a></li>
                     </ul>
                 </div><!-- /navbar -->
@@ -95,9 +93,11 @@
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/gps.js"></script>
         <script type="text/javascript">
-
-                            app.initialize();
-
+		console.log = function(message) {
+			$('#debugDiv').append('<p>' + message + '</p>');
+		};
+		console.error = console.debug = console.info =  console.log
+		app.initialize();
         </script>
     </body>
 </html>

@@ -131,13 +131,14 @@ function gpsSendingTimeOut(doSync)
 		var tmpgpsData = JSON.parse(tmpgpsData);
 		var keys = Object.keys(tmpgpsData);
 		keys = keys.reverse();
-		console.log(keys);
 		
 		var j = uploadAmount();
 		if(keys.length < j) {
 			j = keys.length;
 		}
+		
 		console.log('Sending Data');
+		
 		for (i = 0; i < j; i++) {
 			var k = keys[i];
 			if(k !== 'undefined' && k !== null) {
@@ -155,7 +156,6 @@ function gpsSendingTimeOut(doSync)
 			}
 		}
 		
-		console.log(j);
 		gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
 		
 		$.ajax("http://www.coachclick.co.uk/app/track.php", {
@@ -211,7 +211,7 @@ function gatherGpsdata() {
 	
 	checkConnection();
 	checkUnsent();
-    // console.log(permanentStorage.getItem("gpsData"));
+    console.log('GPS Gathered');
 }
 
 function onError(error) {
