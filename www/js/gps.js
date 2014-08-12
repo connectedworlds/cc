@@ -39,7 +39,7 @@ var gps = {
         var gpsGatheringTime = getGpsGatheringTime();
         gps.gatheringTimer = window.setTimeout(gpsGatheringTimeOut, gpsGatheringTime);
         gps.sendingTimer = window.setTimeout(gpsSendingTimeOut, 20 * 1000);
-        window.addEventListener("batterystatus", onBatteryStatus, false);
+        
     },
     stop: function() {
         isTracking = false;
@@ -116,6 +116,8 @@ function gpsSendingTimeOut()
 	var storedAuth = permanentStorage.getItem("auth");
 	var gpsAjaxDataToSend = {};
 	gpsAjaxDataToSend.gps = {};
+	
+	
 	
 	
 	// console.log(tmpgpsData);
@@ -236,18 +238,20 @@ function onError(error) {
 }
 
 function onBatteryStatus(info) {
-    // Handle the online event
-    //alert("Level: " + info.level + " isPlugged: " + info.isPlugged);
-    if (isTracking == false)
-    {
-        return;
-    }
     batteryLevel = info.level;
     console.log("Level: " + info.level + " isPlugged: " + info.isPlugged);
     if (gps.sendingTimer) {
         window.clearTimeout(gps.sendingTimer);
     }
     gps.sendingTimer = window.setTimeout(gpsSendingTimeOut, getGpsSendingtime());
+	
+	if(info.isPlugged) {
+		$('#batterylevel').text('plugged');
+	} else {
+		$('#batterylevel').text(batteryLevel+'%');
+	}
+	console.log(batteryLevel);
+	
 }
 
 //function sendDataBeforeStopTracking()

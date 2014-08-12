@@ -7,6 +7,8 @@ deviceInfo = {
     model: null
 };
 var auth;
+var permanentStorage = window.localStorage;	
+var connectionSpeed = '';
 var app = {
     SERVER_LOGIN_URL: "http://www.coachclick.co.uk/app/login.php",
     HIGH_GPS_ACCURACY: true, // some emulators require true.
@@ -23,16 +25,14 @@ var app = {
         this.bindEvents();
         this.initFastClick();
         this.initUserId();
-        this.initPasscode();
         this.initView();
-		this.checkConnection();
+		checkConnection();
+		checkUnsent();
         app.timeLastSubmit = (new Date().getTime() / 1000) - 60;
-		
-		var permanentStorage = window.localStorage;	
 		
     },
     bindEvents: function() {
-//        document.addEventListener("pause", onPause, false);
+       window.addEventListener("batterystatus", onBatteryStatus, false);
     },
     initFastClick: function() {
         window.addEventListener('load', function() {
@@ -40,28 +40,13 @@ var app = {
         }, false);
     },
     initUserId: function() {
-        var permanentStorage = window.localStorage;
         this.deviceId = permanentStorage.getItem("deviceId");
         if (this.deviceId === null) {
             permanentStorage.setItem("deviceId", Math.floor((Math.random() * 100000)));
             this.deviceId = permanentStorage.getItem("deviceId");
         }
     },
-    initPasscode: function() {
-        // var permanentStorage = window.localStorage;
-        // this.password = permanentStorage.getItem("password");
-        // this.email = permanentStorage.getItem("email");
-        // if (this.passcode !== null) {
-            // $('#email').val(permanentStorage.getItem("email"));
-			// $('#password').val(permanentStorage.getItem("password"));
-        // } else {
-			// $("#trackingPage").hide();
-			// $("#settingsPage").show();
-		// }
-		
-    },
     initView: function() {
-		var permanentStorage = window.localStorage;
 		auth = permanentStorage.getItem("auth");
         if (auth !== null) {
             $('#email').val(permanentStorage.getItem("email"));
@@ -75,22 +60,6 @@ var app = {
 		}
 		// console.log(auth);
 		// permanentStorage.removeItem("gpsData")
-    },
-    checkConnection: function() {
-        var networkState = navigator.connection.type;
-
-        var states = {};
-        states[Connection.UNKNOWN] = 'Unknown';
-        states[Connection.ETHERNET] = 'Ethernet';
-        states[Connection.WIFI] = 'WiFi';
-        states[Connection.CELL_2G] = 'Cell 2G';
-        states[Connection.CELL_3G] = 'Cell 3G';
-        states[Connection.CELL_4G] = 'Cell 4G';
-        states[Connection.CELL] = 'Cell';
-        states[Connection.NONE] = 'No';
-
-        $('#connectionType').text(states[networkState]);
-		
     },
     getReadableTime: function(time) {
         var hours = time.getHours();
@@ -106,6 +75,57 @@ var app = {
     }
 };
 
+function checkConnection() {
+
+	if(navigator.platform !== 'Win32') {
+		var networkState = navigator.connection.type;
+		var states = {};
+		states[Connection.UNKNOWN] = 'Unknown';
+		states[Connection.ETHERNET] = 'Ethernet';
+		states[Connection.WIFI] = 'WiFi';
+		states[Connection.CELL_2G] = 'Cell 2G';
+		states[Connection.CELL_3G] = 'Cell 3G';
+		states[Connection.CELL_4G] = 'Cell 4G';
+		states[Connection.CELL] = 'Cell';
+		states[Connection.NONE] = 'No';
+
+		connectionSpeed = states[networkState];
+		$('#connectionType').text(states[networkState]);
+		
+	} else {
+		$('#connectionType').text('PC');
+	}
+	
+}
+
+function checkUnsent() {
+
+	var tmpgpsData = permanentStorage.getItem("gpsData");
+	var synctext = 'synced';
+	if(typeof tmpgpsData === 'object' && tmpgpsData !== null) {
+		var keys = Object.keys(tmpgpsData);
+		if(keys.length > 0) {
+			synctext = keys.length;
+		}
+	}
+	$('#gpsUnsent').text(synctext);
+	
+}
+
+function checkUnsent() {
+
+	var tmpgpsData = permanentStorage.getItem("gpsData");
+	var synctext = 'synced';
+	if(typeof tmpgpsData === 'object' && tmpgpsData !== null) {
+		var keys = Object.keys(tmpgpsData);
+		if(keys.length > 0) {
+			synctext = keys.length;
+		}
+	}
+	$('#gpsUnsent').text(synctext);
+	
+}
+
 function onDeviceReady() {
     window.plugin.backgroundMode.enable();
     navigator.splashscreen.hide();
@@ -119,7 +139,9 @@ function onDeviceReady() {
     // alert(JSON.stringify(deviceInfo));
 //        gps.init();
 }
+
 document.addEventListener('deviceready', onDeviceReady, false);
+
 $(function() {
 
 
@@ -143,7 +165,6 @@ $(function() {
 });
 
 app.doLogin = function() {
-	var permanentStorage = window.localStorage;
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
 
@@ -171,7 +192,6 @@ app.doLogin = function() {
 
 };
 app.serverSuccess = function(response) {
-	var permanentStorage = window.localStorage;
     response = JSON.parse(response);
 	console.log(response);
     if (response.status == 200)
