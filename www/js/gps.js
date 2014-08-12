@@ -6,7 +6,7 @@ gpsAjaxData = {
 //    auth: auth
     gps: {}
 };
-var doSync = '';
+var doSync = false;
 var gps = {
     GPSWatchId: null,
     gpsErrorCount: 0,
@@ -20,10 +20,8 @@ var gps = {
     },
     sync: function() {
         isTracking = false;
-        showNotification();
         console.log("Sync Started");
-		gpsSendingTimeOut(doSync);
-        
+		gpsSendingTimeOut(true);
     },
 	start: function() {
         isTracking = true;
@@ -42,7 +40,7 @@ var gps = {
 //        navigator.geolocation.getCurrentPosition(onSuccess,onError, gpsOptions, {enableHighAccuracy: true});
         var gpsGatheringTime = getGpsGatheringTime();
         gps.gatheringTimer = window.setTimeout(gpsGatheringTimeOut, gpsGatheringTime);
-        gps.sendingTimer = window.setTimeout(gpsSendingTimeOut(doSync), 20 * 1000);
+        gps.sendingTimer = window.setTimeout(gpsSendingTimeOut(false), 20 * 1000);
         
     },
     stop: function() {
@@ -80,13 +78,16 @@ function gpsGatheringTimeOut() {
 
 function getGpsGatheringTime()
 {
-    return 3 * 1000; //Predefined 10 sec
+    return 10000; 
 }
 
 function getGpsSendingtime()
 {
-
-    if (batteryLevel > 1) {
+	console.log(batteryLevel);
+    if (batteryLevel = 100) {
+        return 4 * 1000; 
+    }
+    else if (batteryLevel > 1) {
         return (20 / batteryLevel) * 100000; // 10sec min time interval to send data to server
     }
     else {
@@ -109,7 +110,7 @@ function uploadAmount() {
 		upload[Connection.NONE] = 0;
 		return upload[networkState];
 	} else {
-		return 30;
+		return 5;
 	}
 	
 	
@@ -123,7 +124,6 @@ function gpsSendingTimeOut(doSync)
 	var gpsAjaxDataToSend = {};
 	gpsAjaxDataToSend.gps = {};
 	
-	// console.log(tmpgpsData);
 	if(tmpgpsData === null) {
 		console.log("No data stored in local storage");
 		return;
@@ -137,7 +137,7 @@ function gpsSendingTimeOut(doSync)
 		if(keys.length < j) {
 			j = keys.length;
 		}
-		
+		console.log('Sending Data');
 		for (i = 0; i < j; i++) {
 			var k = keys[i];
 			if(k !== 'undefined' && k !== null) {
@@ -156,37 +156,30 @@ function gpsSendingTimeOut(doSync)
 		}
 		
 		console.log(j);
-		if(j > 0) {
-			gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
-			
-			$.ajax("http://www.coachclick.co.uk/app/track.php", {
-				type: "POST",
-				dataType : 'json',
-				data: gpsAjaxDataToSend			
-			}).done(function(response) {
-				// console.log(response.storedgps);
-				for (i = 0; i < response.storedgps.length; i++) {
-					delete (tmpgpsData[response.storedgps[i]]);
-				}
-				permanentStorage.setItem("gpsData", JSON.stringify(tmpgpsData));
-				console.log(keys.length);
-
-				checkConnection();
-				checkUnsent();
-				
-			}).always(function(response) {
-				gps.sendingTimer = window.setTimeout(gpsSendingTimeOut(doSync), getGpsSendingtime());
-				checkConnection();
-				checkUnsent();
-				// console.log(tmpgpsData);
-			}).fail(function(response) {
-				// console.log("always : ",response);
-			});
-			
-		} else {
+		gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
+		
+		$.ajax("http://www.coachclick.co.uk/app/track.php", {
+			type: "POST",
+			dataType : 'json',
+			data: gpsAjaxDataToSend			
+		}).done(function(response) {
+			// console.log(response.storedgps);
+			for (i = 0; i < response.storedgps.length; i++) {
+				delete (tmpgpsData[response.storedgps[i]]);
+			}
+			permanentStorage.setItem("gpsData", JSON.stringify(tmpgpsData));				
+		}).always(function(response) {
 			checkConnection();
-			checkUnsent();
-		}
+			var toSync = checkUnsent();
+			if(!doSync || toSync > 0) {
+				gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, getGpsSendingtime());
+			}
+			
+			// console.log(tmpgpsData);
+		}).fail(function(response) {
+			// console.log("always : ",response);
+		});
+		
 	}
 }
 
@@ -255,42 +248,15 @@ function onError(error) {
 function onBatteryStatus(info) {
     batteryLevel = info.level;
     console.log("Level: " + info.level + " isPlugged: " + info.isPlugged);
-    if (gps.sendingTimer) {
+	if(info.isPlugged) {
+		$('#batterylevel').text('AC');
+	} else {
+		$('#batterylevel').text(batteryLevel+'%');
+	}
+	
+	if (gps.sendingTimer) {
         window.clearTimeout(gps.sendingTimer);
     }
     gps.sendingTimer = window.setTimeout(gpsSendingTimeOut(doSync), getGpsSendingtime());
 	
-	if(info.isPlugged) {
-		$('#batterylevel').text('plugged');
-	} else {
-		$('#batterylevel').text(batteryLevel+'%');
-	}
-	console.log(batteryLevel);
-	
 }
-
-//function sendDataBeforeStopTracking()
-//{
-//
-////    alert("Sending data : " + JSON.stringify(gpsAjaxData));
-//    console.log("Sending Data Before Stop Tracking : " + JSON.stringify(gpsAjaxData));
-//    $.ajax("http://www.coachclick.co.uk/app/track.php", {
-//        type: "POST",
-////        data: JSON.stringify(gpsAjaxData),
-//        data: gpsAjaxData,
-//        success: function(response) {
-////            alert("response : " + response);
-//            console.log("response : " + response);
-//            response = JSON.parse(response);
-//            console.log("response : " + response);
-//            for (i = 0; i < response.length; i++) {
-//                delete gpsAjaxData[response[i]];
-//            }
-//            console.log("gpsajaxdata: response : " + JSON.stringify(gpsAjaxData));
-//        },
-//        error: function(request, errorType, errorMessage) {
-////            alert(JSON.stringify(errorMessage));
-//            console.log("Error");
-//        }
-//    });
-//}

@@ -106,16 +106,18 @@ function checkUnsent() {
 	var tmpgpsData = permanentStorage.getItem("gpsData");
 	tmpgpsData = JSON.parse(tmpgpsData);
 	var synctext = 'synced';
+	var tosync = 0;
 	if(typeof tmpgpsData === 'object' && tmpgpsData !== null) {
 		var keys = Object.keys(tmpgpsData);
 		
 		if(keys.length > 0) {
 			synctext = keys.length;
+			tosync = keys.length;
 			$('#syncnow').show();
 		}
 	}
 	$('#gpsUnsent').text(synctext);
-	
+	return tosync;
 }
 
 function onDeviceReady() {
