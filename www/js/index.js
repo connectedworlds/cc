@@ -9,6 +9,7 @@ deviceInfo = {
 var auth;
 var permanentStorage = window.localStorage;	
 var connectionSpeed = '';
+var pc = false;
 var app = {
     SERVER_LOGIN_URL: "http://www.coachclick.co.uk/app/login.php",
     HIGH_GPS_ACCURACY: true, // some emulators require true.
@@ -29,6 +30,7 @@ var app = {
 		checkConnection();
 		checkUnsent();
         app.timeLastSubmit = (new Date().getTime() / 1000) - 60;
+		console.log(permanentStorage);
 		
     },
     bindEvents: function() {
@@ -93,19 +95,23 @@ function checkConnection() {
 		$('#connectionType').text(states[networkState]);
 		
 	} else {
+		pc = true;
 		$('#connectionType').text('PC');
 	}
 	
 }
 
 function checkUnsent() {
-
+	$('#syncnow').hide();
 	var tmpgpsData = permanentStorage.getItem("gpsData");
+	tmpgpsData = JSON.parse(tmpgpsData);
 	var synctext = 'synced';
 	if(typeof tmpgpsData === 'object' && tmpgpsData !== null) {
 		var keys = Object.keys(tmpgpsData);
+		
 		if(keys.length > 0) {
 			synctext = keys.length;
+			$('#syncnow').show();
 		}
 	}
 	$('#gpsUnsent').text(synctext);
@@ -131,6 +137,10 @@ document.addEventListener('deviceready', onDeviceReady, false);
 $(function() {
 
 
+    $("#syncnow").click(function() {
+        gps.sync();
+    });
+	
     $("#login-button").click(function() {
         app.forcedSubmit = true; // forces pop-up
         app.doLogin();
@@ -206,7 +216,7 @@ app.serverSuccess = function(response) {
     }
 };
 app.serverError = function(request, errorType, errorMessage) {
-	alert("Cannot reach server, We will keep trying in the background.");
+	alert("Cannot reach server, we will keep trying in the background.");
 	$('#logout-button').show();
 	$('#login-button').hide();
 	$("#settingsPage").hide();
@@ -214,18 +224,17 @@ app.serverError = function(request, errorType, errorMessage) {
     console.log(errorMessage);
 };
 
-function onPause() {
-    // Handle the pause event
-//    alert("In onPause function");
-}
-
 function showNotification()
 {
-    window.plugin.notification.local.add({id: "11111", title: "Coach Click Tracking App", message: 'Tracking In Progress', ongoing: true});
+    if(!pc){
+		window.plugin.notification.local.add({id: "11111", title: "Coach Click Tracking App", message: 'Tracking In Progress', ongoing: true});
+	}
 }
 function cancelNotification()
 {
-    window.plugin.notification.local.cancel("11111", function() {
-        console.log("Notification Closed");
-    });
+	if(!pc){
+		window.plugin.notification.local.cancel("11111", function() {
+			console.log("Notification Closed");
+		});
+	}
 }

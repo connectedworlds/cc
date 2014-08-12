@@ -20,14 +20,10 @@
                 <div data-role="content">
                     <div id="track-div" >
                         <a href="#" id="start-tracking" data-role="button" data-inline="true" onclick="gps.init();">Start Tracking</a>
-                        <br>
                         <a href="#" id="stop-tracking" style="display: none;" data-role="button" data-inline="true" onclick="gps.stop();">Stop Tracking</a>
                     </div>
 					<div id="connectionInfo">
-						Internet: <span id="connectionType"></span>
-					</div>
-					<div id="serverInfo">
-						<span id="gpsUnsent"></span>
+						<span id="connectionType"></span>
 					</div>
 					<div id="serverInfo">
 						<span id="gpsUnsent"></span>
@@ -35,6 +31,7 @@
 					<div id="batteryInfo">
 						<span id="batterylevel"></span>
 					</div>
+					<a id="syncnow">Sync Now</a>
                 </div>
             </div><!-- /page  -->
 			

@@ -6,6 +6,7 @@ gpsAjaxData = {
 //    auth: auth
     gps: {}
 };
+var doSync = '';
 var gps = {
     GPSWatchId: null,
     gpsErrorCount: 0,
@@ -17,17 +18,20 @@ var gps = {
     },
     initToggleListener: function() {
     },
-    start: function() {
+    sync: function() {
+        isTracking = false;
+        showNotification();
+        console.log("Sync Started");
+		gpsSendingTimeOut(doSync);
+        
+    },
+	start: function() {
         isTracking = true;
         $("#start-tracking").hide();
         $("#stop-tracking").show();
         showNotification();
         console.log("Tracking Started");
 
-        if (isTracking == false)
-        {
-            return;
-        }
         var gpsOptions = {
             enableHighAccuracy: app.HIGH_GPS_ACCURACY,
             timeout: 1000 * 60 * 4,
@@ -38,7 +42,7 @@ var gps = {
 //        navigator.geolocation.getCurrentPosition(onSuccess,onError, gpsOptions, {enableHighAccuracy: true});
         var gpsGatheringTime = getGpsGatheringTime();
         gps.gatheringTimer = window.setTimeout(gpsGatheringTimeOut, gpsGatheringTime);
-        gps.sendingTimer = window.setTimeout(gpsSendingTimeOut, 20 * 1000);
+        gps.sendingTimer = window.setTimeout(gpsSendingTimeOut(doSync), 20 * 1000);
         
     },
     stop: function() {
@@ -50,7 +54,7 @@ var gps = {
         if (gps.sendingTimer) {
             window.clearTimeout(gps.sendingTimer);
         }
-        gpsSendingTimeOut();
+        gpsSendingTimeOut(doSync);
         console.log("Tracking Stopped");
         if (gps.GPSWatchId)
         {
@@ -92,33 +96,32 @@ function getGpsSendingtime()
 
 function uploadAmount() {
 	
-	var networkState = navigator.connection.type;
-	var upload = {};
-	upload[Connection.UNKNOWN] = 10;
-	upload[Connection.ETHERNET] = 30;
-	upload[Connection.WIFI] = 30;
-	upload[Connection.CELL_2G] = 1;
-	upload[Connection.CELL_3G] = 10;
-	upload[Connection.CELL_4G] = 30;
-	upload[Connection.CELL] = 1;
-	upload[Connection.NONE] = 0;
+	if(!pc){
+		var networkState = navigator.connection.type;
+		var upload = {};
+		upload[Connection.UNKNOWN] = 10;
+		upload[Connection.ETHERNET] = 30;
+		upload[Connection.WIFI] = 30;
+		upload[Connection.CELL_2G] = 1;
+		upload[Connection.CELL_3G] = 10;
+		upload[Connection.CELL_4G] = 30;
+		upload[Connection.CELL] = 1;
+		upload[Connection.NONE] = 0;
+		return upload[networkState];
+	} else {
+		return 30;
+	}
 	
-	return upload[networkState];
+	
 	
 }
 
-function gpsSendingTimeOut()
+function gpsSendingTimeOut(doSync)
 {
-
-    gps.sendingTimer = window.setTimeout(gpsSendingTimeOut, getGpsSendingtime());
-    var permanentStorage = window.localStorage;
 	var tmpgpsData = permanentStorage.getItem("gpsData");
 	var storedAuth = permanentStorage.getItem("auth");
 	var gpsAjaxDataToSend = {};
 	gpsAjaxDataToSend.gps = {};
-	
-	
-	
 	
 	// console.log(tmpgpsData);
 	if(tmpgpsData === null) {
@@ -128,15 +131,20 @@ function gpsSendingTimeOut()
 		var tmpgpsData = JSON.parse(tmpgpsData);
 		var keys = Object.keys(tmpgpsData);
 		keys = keys.reverse();
-		// console.log(keys);
+		console.log(keys);
 		
-		for (i = 0; i < uploadAmount(); i++) {
+		var j = uploadAmount();
+		if(keys.length < j) {
+			j = keys.length;
+		}
+		
+		for (i = 0; i < j; i++) {
 			var k = keys[i];
-			if(k !== null) {
+			if(k !== 'undefined' && k !== null) {
 				if(typeof tmpgpsData[k].auth !== 'undefined') {
 					var a = tmpgpsData[k].auth;
 				} else if (storedAuth !== null) {
-					var a = permanentStorage.getItem("auth");
+					var a = storedAuth;
 				} else {
 					app.doLogin();
 				}
@@ -147,30 +155,38 @@ function gpsSendingTimeOut()
 			}
 		}
 		
-		// console.log(tmpgpsData);
-		
-		gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
-		
-		$.ajax("http://www.coachclick.co.uk/app/track.php", {
-			type: "POST",
-			dataType : 'json',
-			data: gpsAjaxDataToSend			
-		}).done(function(response) {
-			// console.log(response.storedgps);
-			for (i = 0; i < response.storedgps.length; i++) {
-				delete (tmpgpsData[response.storedgps[i]]);
-			}
-			permanentStorage.setItem("gpsData", JSON.stringify(tmpgpsData));
+		console.log(j);
+		if(j > 0) {
+			gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
 			
-		}).always(function(response) {
-			// console.log("always : ",response);
-			// console.log(tmpgpsData);
-		}).fail(function(response) {
-			// console.log("always : ",response);
-		});
-		
-		console.log(keys.length);
-		$('#gpsleft').text(keys.length);
+			$.ajax("http://www.coachclick.co.uk/app/track.php", {
+				type: "POST",
+				dataType : 'json',
+				data: gpsAjaxDataToSend			
+			}).done(function(response) {
+				// console.log(response.storedgps);
+				for (i = 0; i < response.storedgps.length; i++) {
+					delete (tmpgpsData[response.storedgps[i]]);
+				}
+				permanentStorage.setItem("gpsData", JSON.stringify(tmpgpsData));
+				console.log(keys.length);
+
+				checkConnection();
+				checkUnsent();
+				
+			}).always(function(response) {
+				gps.sendingTimer = window.setTimeout(gpsSendingTimeOut(doSync), getGpsSendingtime());
+				checkConnection();
+				checkUnsent();
+				// console.log(tmpgpsData);
+			}).fail(function(response) {
+				// console.log("always : ",response);
+			});
+			
+		} else {
+			checkConnection();
+			checkUnsent();
+		}
 	}
 }
 
@@ -190,12 +206,9 @@ function onSuccess(position) {
     gpsLastPosition["batt"] = batteryLevel;
     gpsLastPosition["gpstimestamp"] = position.timestamp;
     // console.log("WatchPosition got data: " + JSON.stringify(gpsLastPosition));
-    console.log("WatchPosition got data: ");
 }
 
-function gatherGpsdata() {
-	var permanentStorage = window.localStorage;
-	
+function gatherGpsdata() {	
 	var tmpgpsData = permanentStorage.getItem("gpsData");
 	if(tmpgpsData !== null) {
 		gpsData = JSON.parse(tmpgpsData);
@@ -203,6 +216,8 @@ function gatherGpsdata() {
     gpsData[(Math.round(new Date().getTime() / 1000)).toString()] = gpsLastPosition;
     permanentStorage.setItem("gpsData", JSON.stringify(gpsData));
 	
+	checkConnection();
+	checkUnsent();
     // console.log(permanentStorage.getItem("gpsData"));
 }
 
@@ -243,7 +258,7 @@ function onBatteryStatus(info) {
     if (gps.sendingTimer) {
         window.clearTimeout(gps.sendingTimer);
     }
-    gps.sendingTimer = window.setTimeout(gpsSendingTimeOut, getGpsSendingtime());
+    gps.sendingTimer = window.setTimeout(gpsSendingTimeOut(doSync), getGpsSendingtime());
 	
 	if(info.isPlugged) {
 		$('#batterylevel').text('plugged');
