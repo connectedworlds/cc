@@ -112,20 +112,6 @@ function checkUnsent() {
 	
 }
 
-function checkUnsent() {
-
-	var tmpgpsData = permanentStorage.getItem("gpsData");
-	var synctext = 'synced';
-	if(typeof tmpgpsData === 'object' && tmpgpsData !== null) {
-		var keys = Object.keys(tmpgpsData);
-		if(keys.length > 0) {
-			synctext = keys.length;
-		}
-	}
-	$('#gpsUnsent').text(synctext);
-	
-}
-
 function onDeviceReady() {
     window.plugin.backgroundMode.enable();
     navigator.splashscreen.hide();
