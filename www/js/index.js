@@ -193,13 +193,18 @@ app.serverSuccess = function(response) {
 		permanentStorage.removeItem("auth");
 		permanentStorage.removeItem("email");
 		permanentStorage.removeItem("password");
+		$("#trackingPage").hide();
+		$("#settingsPage").show();
+		auth = '';
+		alert(response.message);
     }
 };
 app.serverError = function(request, errorType, errorMessage) {
-	alert("Cannot reach server, Please try again in a few minutes.");
-	permanentStorage.removeItem("auth");
-	permanentStorage.removeItem("email");
-	permanentStorage.removeItem("password");
+	alert("Cannot reach server, We will keep trying in the background.");
+	$('#logout-button').show();
+	$('#login-button').hide();
+	$("#settingsPage").hide();
+	$("#trackingPage").show();
     console.log(errorMessage);
 };
 

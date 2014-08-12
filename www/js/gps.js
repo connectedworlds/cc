@@ -21,7 +21,7 @@ var gps = {
         isTracking = true;
         $("#start-tracking").hide();
         $("#stop-tracking").show();
-        // showNotification();
+        showNotification();
         console.log("Tracking Started");
 
         if (isTracking == false)
@@ -45,9 +45,8 @@ var gps = {
         isTracking = false;
         $("#stop-tracking").hide();
         $("#start-tracking").show();
-        // cancelNotification();
-//        sendDataBeforeStopTracking();
-        // Clear old timer.
+        cancelNotification();
+
         if (gps.sendingTimer) {
             window.clearTimeout(gps.sendingTimer);
         }
@@ -60,7 +59,6 @@ var gps = {
         if (gps.gatheringTimer) {
             window.clearTimeout(gps.gatheringTimer);
         }
-        // Clear new timer.
         if (gps.sendingTimer) {
             window.clearTimeout(gps.sendingTimer);
         }
@@ -92,6 +90,23 @@ function getGpsSendingtime()
     }
 }
 
+function uploadAmount() {
+	
+	var networkState = navigator.connection.type;
+	var upload = {};
+	upload[Connection.UNKNOWN] = 10;
+	upload[Connection.ETHERNET] = 30;
+	upload[Connection.WIFI] = 30;
+	upload[Connection.CELL_2G] = 1;
+	upload[Connection.CELL_3G] = 10;
+	upload[Connection.CELL_4G] = 30;
+	upload[Connection.CELL] = 1;
+	upload[Connection.NONE] = 0;
+	
+	return upload[networkState];
+	
+}
+
 function gpsSendingTimeOut()
 {
 
@@ -101,6 +116,8 @@ function gpsSendingTimeOut()
 	var storedAuth = permanentStorage.getItem("auth");
 	var gpsAjaxDataToSend = {};
 	gpsAjaxDataToSend.gps = {};
+	
+	
 	// console.log(tmpgpsData);
 	if(tmpgpsData === null) {
 		console.log("No data stored in local storage");
@@ -111,7 +128,7 @@ function gpsSendingTimeOut()
 		keys = keys.reverse();
 		// console.log(keys);
 		
-		for (i = 0; i < 10; i++) {
+		for (i = 0; i < uploadAmount(); i++) {
 			var k = keys[i];
 			if(k !== null) {
 				if(typeof tmpgpsData[k].auth !== 'undefined') {
