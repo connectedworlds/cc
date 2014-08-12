@@ -1,6 +1,7 @@
-betteryLevel = 100;
+batteryLevel = 100;
+var gpsData = {};
 isTracking = true;
-gpsLastPositoin = {};
+gpsLastPosition = {};
 gpsAjaxData = {
 //    auth: auth
     gps: {}
@@ -20,8 +21,7 @@ var gps = {
         isTracking = true;
         $("#start-tracking").hide();
         $("#stop-tracking").show();
-        $("#logout-button").hide();
-        showNotification();
+        // showNotification();
         console.log("Tracking Started");
 
         if (isTracking == false)
@@ -45,15 +45,14 @@ var gps = {
         isTracking = false;
         $("#stop-tracking").hide();
         $("#start-tracking").show();
-        $("#logout-button").show();
-        cancelNotification();
+        // cancelNotification();
 //        sendDataBeforeStopTracking();
         // Clear old timer.
         if (gps.sendingTimer) {
             window.clearTimeout(gps.sendingTimer);
         }
         gpsSendingTimeOut();
-        console.log("Tracking Stoped");
+        console.log("Tracking Stopped");
         if (gps.GPSWatchId)
         {
             navigator.geolocation.clearWatch(gps.GPSWatchId);
@@ -79,14 +78,14 @@ function gpsGatheringTimeOut() {
 
 function getGpsGatheringTime()
 {
-    return 10 * 1000; //Predefined 10 sec
+    return 3 * 1000; //Predefined 10 sec
 }
 
 function getGpsSendingtime()
 {
-//    return 12000; 
-    if (betteryLevel > 1) {
-        return (20 / betteryLevel) * 100000; // 10sec min time interval to send data to server
+
+    if (batteryLevel > 1) {
+        return (20 / batteryLevel) * 100000; // 10sec min time interval to send data to server
     }
     else {
         return 100000000; // infinete when bettery status is less 1%
@@ -95,97 +94,97 @@ function getGpsSendingtime()
 
 function gpsSendingTimeOut()
 {
-//    if (isTracking == false)
-//    {
-//        return;
-//    }
-//    alert('1');
-    gps.sendingTimer = window.setTimeout(gpsSendingTimeOut, getGpsSendingtime());
-    var gpsAjaxDataToSend = {};
-    var permanentStorage = window.localStorage;
-//    alert('2');
-    if (permanentStorage.gpsData)
-    {
-//        alert('3');
-        gpsAjaxDataToSend = permanentStorage.gpsData;
-//        alert('4');
-        if (gpsAjaxDataToSend == "")
-        {
-//            alert("No data stored in local storage");
-            console.log("No data stored in local storage");
-            return;
-        }
-    }
-    else
-    {
-//        alert('5');
-//        alert("No data stored in local storage");
-        console.log("No data stored in local storage");
-//        if (gps.sendingTimer)
-//        {
-//            window.clearTimeout(gps.sendingTimer);
-//        }
-        return;
-    }
-//    alert('6');
 
-//    alert("Sending data : " + JSON.stringify(gpsAjaxData));
-    console.log("Sending data : " + JSON.stringify(gpsAjaxData));
-    var op = '<li style="color:red;">Data sent</li>';
-    $("#gpsGatheringLog").append(op);
-//    $("#gpsSendingLog").html(JSON.stringify(gpsAjaxData));
-    $.ajax("http://www.coachclick.co.uk/app/track.php", {
-        type: "POST",
-//        data: JSON.stringify(gpsAjaxData),
-        data: gpsAjaxDataToSend,
-        success: function(response) {
-//            alert("response : " + response);
-            console.log("response : " + response);
-            response = JSON.parse(response);
-//            console.log("response : " + response);
-            for (i = 0; i < response.storedgps.length; i++) {
-                delete (gpsAjaxData.gps[response.storedgps[i]]);
-            }
-            console.log("gpsajaxdata: response : " + JSON.stringify(gpsAjaxData));
-            var permanentStorage = window.localStorage;
-            permanentStorage.setItem("gpsData", JSON.stringify(gpsAjaxData));
-        },
-        error: function(request, errorType, errorMessage) {
-//            alert(JSON.stringify(errorMessage));
-//            alert("Error");
-            console.log("Error");
-        }
-    });
+    gps.sendingTimer = window.setTimeout(gpsSendingTimeOut, getGpsSendingtime());
+    var permanentStorage = window.localStorage;
+	var tmpgpsData = permanentStorage.getItem("gpsData");
+	var storedAuth = permanentStorage.getItem("auth");
+	var gpsAjaxDataToSend = {};
+	gpsAjaxDataToSend.gps = {};
+	// console.log(tmpgpsData);
+	if(tmpgpsData === null) {
+		console.log("No data stored in local storage");
+		return;
+	} else {
+		var tmpgpsData = JSON.parse(tmpgpsData);
+		var keys = Object.keys(tmpgpsData);
+		keys = keys.reverse();
+		// console.log(keys);
+		
+		for (i = 0; i < 10; i++) {
+			var k = keys[i];
+			if(k !== null) {
+				if(typeof tmpgpsData[k].auth !== 'undefined') {
+					var a = tmpgpsData[k].auth;
+				} else if (storedAuth !== null) {
+					var a = permanentStorage.getItem("auth");
+				} else {
+					app.doLogin();
+				}
+				if(typeof gpsAjaxDataToSend.gps[a] === 'undefined') {
+					gpsAjaxDataToSend.gps[a] = {};
+				}
+				gpsAjaxDataToSend.gps[a][k] = tmpgpsData[k];
+			}
+		}
+		
+		// console.log(tmpgpsData);
+		
+		gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
+		
+		$.ajax("http://www.coachclick.co.uk/app/track.php", {
+			type: "POST",
+			dataType : 'json',
+			data: gpsAjaxDataToSend			
+		}).done(function(response) {
+			// console.log(response.storedgps);
+			for (i = 0; i < response.storedgps.length; i++) {
+				delete (tmpgpsData[response.storedgps[i]]);
+			}
+			permanentStorage.setItem("gpsData", JSON.stringify(tmpgpsData));
+			
+		}).always(function(response) {
+			// console.log("always : ",response);
+			// console.log(tmpgpsData);
+		}).fail(function(response) {
+			// console.log("always : ",response);
+		});
+		
+		console.log(keys.length);
+		$('#gpsleft').text(keys.length);
+	}
 }
 
 function onSuccess(position) {
-    gpsLastPositoin = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-        alt: position.coords.altitude
-    };
-    gpsLastPositoin["acc-x"] = position.coords.accuracy;
-    gpsLastPositoin["acc-y"] = position.coords.accuracy;
-    gpsLastPositoin["acc-z"] = position.coords.altitudeAccuracy;
-    gpsLastPositoin["batt"] = betteryLevel;
-    gpsLastPositoin["gpstimestamp"] = position.timestamp;
-    console.log("WatchPosition got data: " + JSON.stringify(gpsLastPositoin));
+	// console.log(position);
+    gpsLastPosition = {};
+    gpsLastPosition["auth"] = auth;
+    gpsLastPosition["lat"] = position.coords.latitude;
+    gpsLastPosition["lng"] = position.coords.longitude;
+    gpsLastPosition["alt"] = position.coords.altitude;
+    gpsLastPosition["speed"] = position.coords.speed;
+    gpsLastPosition["heading"] = position.coords.heading;
+    gpsLastPosition["accuracy"] = position.coords.accuracy;
+    gpsLastPosition["acc-x"] = position.coords.accuracy;
+    gpsLastPosition["acc-y"] = position.coords.accuracy;
+    gpsLastPosition["acc-z"] = position.coords.altitudeAccuracy;
+    gpsLastPosition["batt"] = batteryLevel;
+    gpsLastPosition["gpstimestamp"] = position.timestamp;
+    // console.log("WatchPosition got data: " + JSON.stringify(gpsLastPosition));
+    console.log("WatchPosition got data: ");
 }
 
 function gatherGpsdata() {
-
-//    delete gpsAjaxData["auth"]; //to put auth at end, first delete it and then append it.
-    gpsAjaxData["auth"] = auth;
-    var tempGpsData = gpsAjaxData.gps;
-    delete gpsAjaxData.gps;
-    gpsAjaxData.gps = tempGpsData;
-    gpsAjaxData.gps[ (Math.round(new Date().getTime() / 1000)).toString() ] = gpsLastPositoin;
-    var permanentStorage = window.localStorage;
-    permanentStorage.setItem("gpsData", JSON.stringify(gpsAjaxData));
-    var op = '<li>' + (Math.round(new Date().getTime() / 1000)).toString() + ' : Data gathered</li>';
-//    op += "<br>" + JSON.stringify(gpsAjaxData) + "<br></li>";
-    $("#gpsGatheringLog").append(op);
-    console.log("Gathering data: \n" +  JSON.stringify(gpsAjaxData));
+	var permanentStorage = window.localStorage;
+	
+	var tmpgpsData = permanentStorage.getItem("gpsData");
+	if(tmpgpsData !== null) {
+		gpsData = JSON.parse(tmpgpsData);
+	}
+    gpsData[(Math.round(new Date().getTime() / 1000)).toString()] = gpsLastPosition;
+    permanentStorage.setItem("gpsData", JSON.stringify(gpsData));
+	
+    // console.log(permanentStorage.getItem("gpsData"));
 }
 
 function onError(error) {
@@ -226,7 +225,7 @@ function onBatteryStatus(info) {
     {
         return;
     }
-    betteryLevel = info.level;
+    batteryLevel = info.level;
     console.log("Level: " + info.level + " isPlugged: " + info.isPlugged);
     if (gps.sendingTimer) {
         window.clearTimeout(gps.sendingTimer);
