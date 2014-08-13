@@ -78,12 +78,13 @@ function gpsGatheringTimeOut() {
 
 function getGpsGatheringTime()
 {
+	console.log('getGpsGatheringTime' + '10000');
     return 10000; 
 }
 
 function getGpsSendingtime()
 {
-	console.log(batteryLevel);
+	console.log('getGpsSendingtime' + batteryLevel);
     if (batteryLevel = 100) {
         return 4 * 1000; 
     }
@@ -97,6 +98,7 @@ function getGpsSendingtime()
 
 function uploadAmount() {
 	
+	var result;
 	if(!pc){
 		var networkState = navigator.connection.type;
 		var upload = {};
@@ -108,11 +110,13 @@ function uploadAmount() {
 		upload[Connection.CELL_4G] = 30;
 		upload[Connection.CELL] = 1;
 		upload[Connection.NONE] = 0;
-		return upload[networkState];
+		result = upload[networkState];
 	} else {
-		return 30;
+		result =  30;
 	}
 	
+	console.log('uploadAmount' + result);
+	return result;
 	
 	
 }
@@ -157,7 +161,7 @@ function gpsSendingTimeOut(doSync)
 		}
 		
 		gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
-		console.log(gpsAjaxDataToSend);
+		
 		$.ajax("http://www.coachclick.co.uk/app/track.php", {
 			type: "POST",
 			dataType : 'json',
@@ -180,7 +184,7 @@ function gpsSendingTimeOut(doSync)
 			
 			// console.log(tmpgpsData);
 		}).fail(function(response) {
-			// console.log("always : ",response);
+			console.log("send failed : ",response);
 		});
 		
 	}
