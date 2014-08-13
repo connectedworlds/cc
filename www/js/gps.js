@@ -82,8 +82,17 @@ function getGpsGatheringTime()
 }
 
 function getGpsSendingtime()
-{	
-	return 4000; 
+{
+	console.log(batteryLevel);
+    if (batteryLevel = 100) {
+        return 4 * 1000; 
+    }
+    else if (batteryLevel > 1) {
+        return (20 / batteryLevel) * 100000; // 10sec min time interval to send data to server
+    }
+    else {
+        return 100000000; // infinete when bettery status is less 1%
+    }
 }
 
 function uploadAmount() {
@@ -162,9 +171,11 @@ function gpsSendingTimeOut(doSync)
 		}).always(function(response) {
 			checkConnection();
 			var toSync = checkUnsent();
-			if(!doSync || toSync > 0) {
+			if(doSync && toSync == 0) {
+				console.log('Sync Complete');
+			} else {
 				gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, getGpsSendingtime());
-				console.log(getGpsSendingtime());
+				console.log('Upload Complete');
 			}
 			
 			// console.log(tmpgpsData);
