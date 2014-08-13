@@ -31,10 +31,10 @@ var app = {
 		checkUnsent();
         app.timeLastSubmit = (new Date().getTime() / 1000) - 60;
 		console.log(permanentStorage);
-		
+		window.addEventListener("batterystatus", onBatteryStatus, false);
     },
     bindEvents: function() {
-       window.addEventListener("batterystatus", onBatteryStatus, false);
+       
     },
     initFastClick: function() {
         window.addEventListener('load', function() {

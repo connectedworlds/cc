@@ -173,6 +173,7 @@ function gpsSendingTimeOut(doSync)
 			var toSync = checkUnsent();
 			if(!doSync || toSync > 0) {
 				gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, getGpsSendingtime());
+				console.log(getGpsSendingtime());
 			}
 			
 			// console.log(tmpgpsData);
