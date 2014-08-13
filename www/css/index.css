@@ -98,8 +98,10 @@ h1 {
 
 .content_div {
     display: none;
+	margin-top:60px;
 }
-.content_div:first-child {
+
+#trackingPage {
     display: block;
 }
 
@@ -145,20 +147,6 @@ top:-22px;
     position:relative;
 }
 
-#logo{
-	max-height:150px;
-}
-#logos p{
-		margin:0;
-		font-size:0.8em;
-	    text-transform:none;
-		text-align:left;
-	
-}
-#logos img{
-	max-width:70%;
-	margin-top: 5% ;
-}
 
 #legal p{
 		font-size:0.7em;
@@ -204,11 +192,12 @@ display:none;
 	background-color:#FF9999;
 }
 
-.logo{
-	background:url('../img/logo.png') no-repeat center 30%;
-	width:100%;
-	display:block;
-	min-height:150px;
+#logo{
+width: 300px;
+left: 50%;
+position: absolute;
+margin-left: -150px;
+margin-top: 10px;
 }
 
 .ui-content {
@@ -251,6 +240,10 @@ padding-top:35px;
 font-size:10px;
 padding-bottom:.2em;
 text-transform:capitalize;
+}
+
+.ui-btn-up-a{
+background:none !important;
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
