@@ -110,7 +110,7 @@ function uploadAmount() {
 		upload[Connection.NONE] = 0;
 		return upload[networkState];
 	} else {
-		return 5;
+		return 30;
 	}
 	
 	
@@ -157,7 +157,7 @@ function gpsSendingTimeOut(doSync)
 		}
 		
 		gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
-		
+		console.log(gpsAjaxDataToSend);
 		$.ajax("http://www.coachclick.co.uk/app/track.php", {
 			type: "POST",
 			dataType : 'json',
@@ -171,11 +171,11 @@ function gpsSendingTimeOut(doSync)
 		}).always(function(response) {
 			checkConnection();
 			var toSync = checkUnsent();
-			if(doSync && toSync == 0) {
+			if(doSync === true && toSync === 0) {
 				console.log('Sync Complete');
 			} else {
 				gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, getGpsSendingtime());
-				console.log('Upload Complete');
+				console.log('Upload Complete - '+getGpsSendingtime());
 			}
 			
 			// console.log(tmpgpsData);
