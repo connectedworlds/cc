@@ -127,7 +127,7 @@ function checkUnsent() {
 function onDeviceReady() {
     window.plugin.backgroundMode.enable();
     navigator.splashscreen.hide();
-    app.checkConnection();
+    checkConnection();
     deviceInfo.name = device.name;
     deviceInfo.cordova = device.cordova;
     deviceInfo.platform = device.platform;
@@ -149,13 +149,17 @@ $(function() {
 	
     $("#login-button").click(function() {
         app.forcedSubmit = true; // forces pop-up
+		console.log("Login Button Clicked");
         app.doLogin();
     });
 
     $("#logout-button").click(function() {
-        auth = null;
-        $('#logout-button').show();
-		$('#login-button').hide();
+        $('#logout-button').hide();
+		$('#login-button').show();
+		permanentStorage.removeItem("email");
+		permanentStorage.removeItem("password");
+		permanentStorage.removeItem("auth");
+		console.log("Logout Button Clicked");
     });
 
     $(document).delegate('.ui-navbar a', 'click', function() {
@@ -173,7 +177,7 @@ app.doLogin = function() {
     app.timeLastSubmit = new Date().getTime() / 1000;
 	permanentStorage.setItem("email", email);
 	permanentStorage.setItem("password", password);
-    app.checkConnection();
+    checkConnection();
     var tempData = {
         email: email,
         password: password,
@@ -184,9 +188,11 @@ app.doLogin = function() {
         data: JSON.stringify(tempData),
         success: function(response) {
             app.serverSuccess(response);
+			console.log("Login Success" + response);
         },
         error: function(request, errorType, errorMessage) {
             app.serverError(request, errorType, errorMessage);
+			console.log("Login Failed" + response);
         }
     });
 	
