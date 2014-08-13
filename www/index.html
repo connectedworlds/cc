@@ -23,15 +23,17 @@
                         <a href="#" id="start-tracking" data-role="button" data-inline="true" onclick="gps.init();">Start Tracking</a>
                         <a href="#" id="stop-tracking" style="display: none;" data-role="button" data-inline="true" onclick="gps.stop();">Stop Tracking</a>
                     </div>
-					<div id="connectionInfo">
-						<span id="connectionType"></span>
-					</div>
-					<div id="serverInfo">
-						<span id="gpsUnsent"></span>
-					</div>
-					<div id="batteryInfo">
-						<span id="batterylevel"></span>
-					</div>
+					<ul id="infocons">
+						<li>
+							<span id="connectionType"></span>
+						</li>
+						<li>
+							<span id="gpsUnsent"></span>
+						</li>
+						<li>
+							<span id="batterylevel"></span>
+						</li>
+					</ul>
 					<a data-role="button" data-inline="true" href="#" id="syncnow">Sync Now</a>
 					
                 </div>
@@ -70,8 +72,7 @@
                         <p style="text-align: center">Developed By <br> <h1>Coach Click</h1></p>
 						<p>This app is for use by members of the website coachclick.co.uk</p>
 						<p>While tracking, this app will continually send information about your location and device to the coachclick servers</p>
-						<p><strong>No data is recorded or sent though while it is not in tracking mode</strong></p>
-						<p><a id="logButton" href="#" data-href="logPage" data-icon="ui-navigation">GPS Log</a></p>
+						<p><strong>No data is recorded or sent to us while it is not in tracking mode</strong></p>
                     </div>
                 </div><!-- /content -->
             </div><!-- /page  -->
@@ -79,8 +80,8 @@
                 <div id="navbar" data-role="navbar">
                     <ul>
                         <li><a id="trackingButton" href="#" data-href="trackingPage" data-icon="nb-status" class="ui-btn-active">Tracking</a></li>
-                        <li><a id="settingsButton" href="#" data-href="settingsPage" data-icon="nb-status" >Settings</a></li>
-						<li><a id="logButton" href="#" data-href="logPage" data-icon="nb-status">Debug</a></li>
+                        <li><a id="settingsButton" href="#" data-href="settingsPage" data-icon="nb-settings" >Settings</a></li>
+						<li><a id="logButton" href="#" data-href="logPage" data-icon="nb-settings">Debug</a></li>
                         <li><a id="privacyButton" href="#" data-href="privacyPage" data-icon="nb-privacy">About</a></li>
                     </ul>
                 </div><!-- /navbar -->

@@ -246,6 +246,16 @@ text-transform:capitalize;
 background:none !important;
 }
 
+.ui-body-c, .ui-overlay-c{
+color:#fff;
+}
+
+#infocons li{
+	display:inline-block;
+	width:80px;
+	height:80px;
+}
+
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
     #navbar .ui-icon-nb-status {
     background: url("../img/iconL/status.png") 50% 50% no-repeat;
