@@ -82,17 +82,8 @@ function getGpsGatheringTime()
 }
 
 function getGpsSendingtime()
-{
-	console.log(batteryLevel);
-    if (batteryLevel = 100) {
-        return 4 * 1000; 
-    }
-    else if (batteryLevel > 1) {
-        return (20 / batteryLevel) * 100000; // 10sec min time interval to send data to server
-    }
-    else {
-        return 100000000; // infinete when bettery status is less 1%
-    }
+{	
+	return 4000; 
 }
 
 function uploadAmount() {
