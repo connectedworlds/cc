@@ -146,12 +146,21 @@ function gpsSendingTimeOut(doSync)
 		for (i = 0; i < j; i++) {
 			var k = keys[i];
 			if(k !== 'undefined' && k !== null) {
-				if(typeof tmpgpsData[k].auth !== 'undefined') {
+				if(typeof tmpgpsData[k].auth !== 'undefined' && tmpgpsData[k].auth !== null && tmpgpsData[k].auth !== '') {
 					var a = tmpgpsData[k].auth;
+					console.log('-'+tmpgpsData[k].auth+'-');
 				} else if (storedAuth !== null) {
 					var a = storedAuth;
+					console.log("using stored auth");
 				} else {
+					console.log("login before send");
 					app.doLogin();
+					if(permanentStorage.getItem("auth") === null) {
+						console.log("login failed");
+						return;
+					};
+					var a = permanentStorage.getItem("auth");
+					
 				}
 				if(typeof gpsAjaxDataToSend.gps[a] === 'undefined') {
 					gpsAjaxDataToSend.gps[a] = {};
@@ -175,11 +184,12 @@ function gpsSendingTimeOut(doSync)
 		}).always(function(response) {
 			checkConnection();
 			var toSync = checkUnsent();
+			var gst = getGpsSendingtime();
 			if(doSync === true && toSync === 0) {
 				console.log('Sync Complete');
 			} else {
-				gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, getGpsSendingtime());
-				console.log('Upload Complete - '+getGpsSendingtime());
+				gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, gst);
+				console.log('Upload Complete - '+gst);
 			}
 			
 			// console.log(tmpgpsData);
@@ -235,7 +245,7 @@ function onError(error) {
         window.clearTimeout(gps.sendingTimer);
     }
 //    gpsSendingTimeOut();
-    console.log("Tracking Stoped");
+    console.log("Tracking Stopped");
     if (gps.GPSWatchId)
     {
         navigator.geolocation.clearWatch(gps.GPSWatchId);

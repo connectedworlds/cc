@@ -178,7 +178,7 @@ text-align:center;
 }
 
 #app, .ui-page {
-background:#fff !important;
+background:url('../img/bg.jpg') !important;
 }
 
 #app {
@@ -204,6 +204,22 @@ display:none;
 	background-color:#FF9999;
 }
 
+.logo{
+	background:url('../img/logo.png') no-repeat center 30%;
+	width:100%;
+	display:block;
+	min-height:150px;
+}
+
+.ui-content {
+	text-align: center;
+}
+
+.ui-bar-a{
+	background:none !important;
+	border:none;
+
+}
 
 /* App Icons */
 #navbar .ui-icon {

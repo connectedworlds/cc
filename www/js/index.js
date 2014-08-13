@@ -173,7 +173,7 @@ $(function() {
 app.doLogin = function() {
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
-
+	var result;
     app.timeLastSubmit = new Date().getTime() / 1000;
 	permanentStorage.setItem("email", email);
 	permanentStorage.setItem("password", password);
@@ -188,20 +188,23 @@ app.doLogin = function() {
         data: JSON.stringify(tempData),
         success: function(response) {
             app.serverSuccess(response);
-			console.log("Login Success" + response);
+			console.log("Login AJAX Success" + response);
+			result = true;
         },
         error: function(request, errorType, errorMessage) {
             app.serverError(request, errorType, errorMessage);
-			console.log("Login Failed" + response);
+			console.log("Login AJAX Failed" + response);
+			result = false;
         }
     });
 	
 	console.log(permanentStorage);
-
+	return result;
 };
+
 app.serverSuccess = function(response) {
     response = JSON.parse(response);
-	console.log(response);
+	// console.log(response);
     if (response.status == 200)
     {
         
@@ -224,11 +227,12 @@ app.serverSuccess = function(response) {
 		$("#trackingPage").hide();
 		$("#settingsPage").show();
 		auth = '';
-		alert(response.message);
+		// alert(response.message);
+		$( "#loginIncorrect" ).text(response.message).popup( "open" );
     }
 };
 app.serverError = function(request, errorType, errorMessage) {
-	alert("Cannot reach server, we will keep trying in the background.");
+	$( "#loginIncorrect" ).popup( "open" );
 	$('#logout-button').show();
 	$('#login-button').hide();
 	$("#settingsPage").hide();
@@ -249,4 +253,11 @@ function cancelNotification()
 			console.log("Notification Closed");
 		});
 	}
+}
+
+if(navigator.platform !== 'Win32') {		
+	console.log = function(message) {
+		$('#debugDiv').append('<p>' + message + '</p>');
+	};
+	console.error = console.debug = console.info =  console.log
 }
