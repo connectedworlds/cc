@@ -232,8 +232,7 @@ function gatherGpsdata() {
 }
 
 function onError(error) {
-    alert("Error getting gps data. Please restart emulator.");
-    console.log("GPS onError. Please restart emulator.");
+    console.log("GPS onError. Is your GPS turned on");
     isTracking = false;
     $("#stop-tracking").hide();
     $("#start-tracking").show();

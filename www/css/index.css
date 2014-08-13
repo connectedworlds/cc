@@ -193,11 +193,11 @@ display:none;
 }
 
 #logo{
-width: 300px;
-left: 50%;
-position: absolute;
-margin-left: -150px;
-margin-top: 10px;
+	width: 300px;
+	left: 50%;
+	position: absolute;
+	margin-left: -150px;
+	margin-top: 25px;
 }
 
 .ui-content {
@@ -248,6 +248,10 @@ background:none !important;
 
 .ui-body-c, .ui-overlay-c{
 color:#fff;
+}
+
+input{
+color:#444 !important;
 }
 
 #infocons li{
