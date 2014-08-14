@@ -84,7 +84,6 @@ function getGpsGatheringTime()
 
 function getGpsSendingtime()
 {
-	console.log('getGpsSendingtime' + batteryLevel);
     if (batteryLevel = 100) {
         return 4 * 1000; 
     }
@@ -185,7 +184,7 @@ function gpsSendingTimeOut(doSync)
 			checkConnection();
 			var toSync = checkUnsent();
 			var gst = getGpsSendingtime();
-			if(doSync === true && toSync === 0 && isTracking = false) {
+			if(doSync === true && toSync === 0 && isTracking == false) {
 				console.log('Sync Complete');
 			} else {
 				gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, gst);

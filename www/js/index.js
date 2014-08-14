@@ -30,8 +30,7 @@ var app = {
 		checkConnection();
 		checkUnsent();
         app.timeLastSubmit = (new Date().getTime() / 1000) - 60;
-		console.log(permanentStorage);
-		window.addEventListener("batterystatus", onBatteryStatus, false);
+		// console.log(permanentStorage);
     },
     bindEvents: function() {
        
@@ -134,8 +133,7 @@ function onDeviceReady() {
     deviceInfo.uuid = device.uuid;
     deviceInfo.model = device.model;
     deviceInfo.version = device.version;
-    // alert(JSON.stringify(deviceInfo));
-//        gps.init();
+	window.addEventListener("batterystatus", onBatteryStatus, false);
 }
 
 document.addEventListener('deviceready', onDeviceReady, false);
@@ -265,7 +263,7 @@ function cancelNotification()
 
 if(navigator.platform !== 'Win32') {		
 	console.log = function(message) {
-		$('#debugDiv').append('<p>' + message + '</p>');
+		$('#debugDiv').prepend('<p>' + message + '</p>');
 	};
 	console.error = console.debug = console.info =  console.log
 }

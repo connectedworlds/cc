@@ -259,9 +259,13 @@ input{
 color:#444 !important;
 }
 
+#infocons {
+	padding:0;
+}
+
 #infocons li{
 	display:inline-block;
-	width:80px;
+	width:120px;
 	height:80px;
 }
 
