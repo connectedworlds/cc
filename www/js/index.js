@@ -143,6 +143,8 @@ $(function() {
 
     $("#syncnow").click(function() {
         gps.sync();
+		$("#syncnow").hide();
+		$('.icon-loop').addClass('loader');
     });
 	
 	$("#start-tracking").click(function() {

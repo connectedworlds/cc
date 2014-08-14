@@ -126,6 +126,7 @@ function gpsSendingTimeOut(doSync)
 	var storedAuth = permanentStorage.getItem("auth");
 	var gpsAjaxDataToSend = {};
 	gpsAjaxDataToSend.gps = {};
+	$('.icon-loop').addClass('loader');
 	
 	if(tmpgpsData === null) {
 		console.log("No data stored in local storage");
@@ -190,7 +191,7 @@ function gpsSendingTimeOut(doSync)
 				gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, gst);
 				console.log('Upload Complete - '+gst);
 			}
-			
+			$('.icon-loop').removeClass('loader');
 			// console.log(tmpgpsData);
 		}).fail(function(response) {
 			console.log("send failed : ",response);
