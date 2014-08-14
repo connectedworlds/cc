@@ -115,7 +115,9 @@ function checkUnsent() {
 		if(keys.length > 0) {
 			synctext = keys.length;
 			tosync = keys.length;
-			$('#syncnow').show();
+			if(isTracking == false) {
+				$('#syncnow').show();
+			}
 		}
 	}
 	$('#gpsUnsent').text(synctext);
