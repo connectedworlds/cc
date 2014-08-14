@@ -147,6 +147,14 @@ $(function() {
         gps.sync();
     });
 	
+	$("#start-tracking").click(function() {
+        gps.init();
+    });
+	
+	$("#stop-tracking").click(function() {
+        gps.stop();
+    });
+	
     $("#login-button").click(function() {
         app.forcedSubmit = true; // forces pop-up
 		console.log("Login Button Clicked");

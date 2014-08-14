@@ -20,21 +20,24 @@
             <div  id="trackingPage" class="content_div">
                 <div data-role="content">
                     <div id="track-div" >
-                        <a href="#" id="start-tracking" data-role="button" data-inline="true" onclick="gps.init();">Start Tracking</a>
-                        <a href="#" id="stop-tracking" style="display: none;" data-role="button" data-inline="true" onclick="gps.stop();">Stop Tracking</a>
+                        <a href="#" id="start-tracking" data-role="button" data-inline="true" >Start Tracking</a>
+                        <a href="#" id="stop-tracking" style="display: none;" data-role="button" data-inline="true" >Stop Tracking</a>
                     </div>
 					<ul id="infocons">
 						<li>
+							<span class="icomoon icon-connection"></span>
 							<span id="connectionType"></span>
 						</li>
 						<li>
+							<span class="icomoon icon-spinner"></span>
 							<span id="gpsUnsent"></span>
 						</li>
 						<li>
+							<span class="icomoon icon-cord"></span>
 							<span id="batterylevel"></span>
 						</li>
 					</ul>
-					<a data-role="button" data-inline="true" href="#" id="syncnow">Sync Now</a>
+					<a data-role="button" data-inline="true" href="#" id="syncnow" style="display: none;">Sync Now</a>
 					
                 </div>
             </div><!-- /page  -->
