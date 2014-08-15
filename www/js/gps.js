@@ -3,7 +3,6 @@ var gpsData = {};
 isTracking = true;
 gpsLastPosition = {};
 gpsAjaxData = {
-//    auth: auth
     gps: {}
 };
 var doSync = false;
@@ -13,7 +12,6 @@ var gps = {
     gatheringTimer: null,
     sendingTimer: null,
     init: function() {
-//        gps.initToggleListener();
         gps.start();
     },
     initToggleListener: function() {
@@ -238,7 +236,6 @@ function onError(error) {
     $("#start-tracking").show();
     $("#logout-button").show();
     cancelNotification();
-    //        sendDataBeforeStopTracking();
     // Clear old timer.
     if (gps.sendingTimer) {
         window.clearTimeout(gps.sendingTimer);
@@ -256,9 +253,6 @@ function onError(error) {
     if (gps.sendingTimer) {
         window.clearTimeout(gps.sendingTimer);
     }
-
-//    alert(JSON.stringify(error));
-//    navigator.geolocation.clearWatch(gps.GPSWatchId);
 }
 
 function onBatteryStatus(info) {
@@ -268,11 +262,5 @@ function onBatteryStatus(info) {
 		$('#batterylevel').text('AC');
 	} else {
 		$('#batterylevel').text(batteryLevel+'%');
-	}
-	
-	if (gps.sendingTimer) {
-        window.clearTimeout(gps.sendingTimer);
-    }
-    gps.sendingTimer = window.setTimeout(gpsSendingTimeOut(doSync), getGpsSendingtime());
-	
+	}	
 }
