@@ -107,7 +107,7 @@ function checkUnsent() {
 	$('#syncnow').hide();
 	var tmpgpsData = permanentStorage.getItem("gpsData");
 	tmpgpsData = JSON.parse(tmpgpsData);
-	var synctext = 'synced';
+	var synctext = 'Synced';
 	var tosync = 0;
 	if(typeof tmpgpsData === 'object' && tmpgpsData !== null) {
 		var keys = Object.keys(tmpgpsData);
