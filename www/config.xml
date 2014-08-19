@@ -62,7 +62,8 @@
 
     <!-- Define app icon for each platform. -->
     <icon src="icon.png" />
-    <icon src="res/icon/android/res/drawable-ldpi/Icon.png"   gap:platform="android"    gap:qualifier="ldpi" />
+    <!--
+	<icon src="res/icon/android/res/drawable-ldpi/Icon.png"   gap:platform="android"    gap:qualifier="ldpi" />
     <icon src="res/icon/android/res/drawable-mdpi/Icon.png"   gap:platform="android"    gap:qualifier="mdpi" />
     <icon src="res/icon/android/res/drawable-hdpi/Icon.png"   gap:platform="android"    gap:qualifier="hdpi" />
     <icon src="res/icon/android/res/drawable-xhdpi/Icon.png"  gap:platform="android"    gap:qualifier="xhdpi" />
@@ -75,6 +76,7 @@
     <icon src="res/icon/webos/icon-64.png"          gap:platform="webos" />
     <icon src="res/icon/windows-phone/icon-48.png"  gap:platform="winphone" />
     <icon src="res/icon/windows-phone/icon-173.png" gap:platform="winphone"   gap:role="background" />
+	-->
 
     <!-- Define app splash screen for each platform. -->
     <gap:splash src="res/screen/android/screen-ldpi-portrait.png"       gap:platform="android" gap:qualifier="port-ldpi" />
