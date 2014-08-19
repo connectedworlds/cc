@@ -6,6 +6,7 @@ deviceInfo = {
     version: null,
     model: null
 };
+var isTracking;
 var auth;
 var permanentStorage = window.localStorage;	
 var connectionSpeed = '';

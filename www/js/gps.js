@@ -1,6 +1,5 @@
 batteryLevel = 100;
 var gpsData = {};
-isTracking = true;
 gpsLastPosition = {};
 gpsAjaxData = {
     gps: {}
