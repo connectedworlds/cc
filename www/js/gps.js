@@ -146,7 +146,7 @@ function gpsSendingTimeOut(doSync)
 			if(k !== 'undefined' && k !== null) {
 				if(typeof tmpgpsData[k].auth !== 'undefined' && tmpgpsData[k].auth !== null && tmpgpsData[k].auth !== '') {
 					var a = tmpgpsData[k].auth;
-					console.log('-'+tmpgpsData[k].auth+'-');
+					//console.log('-'+tmpgpsData[k].auth+'-');
 				} else if (storedAuth !== null) {
 					var a = storedAuth;
 					console.log("using stored auth");
@@ -168,6 +168,7 @@ function gpsSendingTimeOut(doSync)
 		}
 		
 		gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
+		console.log(gpsAjaxDataToSend);
 		
 		$.ajax("http://www.coachclick.co.uk/app/track.php", {
 			type: "POST",

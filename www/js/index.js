@@ -115,7 +115,7 @@ function checkUnsent() {
 		if(keys.length > 0) {
 			synctext = keys.length;
 			tosync = keys.length;
-			if(isTracking == false) {
+			if(isTracking != true) {
 				$('#syncnow').show();
 			}
 		}
