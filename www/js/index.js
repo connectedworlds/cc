@@ -129,6 +129,7 @@ function onDeviceReady() {
     window.plugin.backgroundMode.enable();
     navigator.splashscreen.hide();
     checkConnection();
+	checkUnsent();
     deviceInfo.name = device.name;
     deviceInfo.cordova = device.cordova;
     deviceInfo.platform = device.platform;
@@ -267,7 +268,10 @@ function cancelNotification()
 
 if(navigator.platform !== 'Win32') {		
 	console.log = function(message) {
-		$('#debugDiv').prepend('<p>' + message + '</p>');
+		$('#debugDiv').prepend('<p data-log="'+$("#debugDiv p").length+'">' + message + '</p>');
+		if($("#debugDiv p").length > 30){
+			$("#debugDiv p")[($("#debugDiv p").length)-1].remove();
+		}
 	};
 	console.error = console.debug = console.info =  console.log
 }

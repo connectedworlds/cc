@@ -230,7 +230,7 @@ function gatherGpsdata() {
 }
 
 function onError(error) {
-    console.log("GPS onError. Is your GPS turned on");
+    alert("GPS onError. Is your GPS turned on? Please double check and click 'Start Tracking' again");
     isTracking = false;
     $("#stop-tracking").hide();
     $("#start-tracking").show();
