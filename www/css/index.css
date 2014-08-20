@@ -167,11 +167,15 @@ top:-22px;
 }
 
 #app #statusPage, #app #privacyPage, #settingsPage {
-text-align:center;
+	text-align:center;
 }
 
 #app, .ui-page {
-background:url('../img/bg.jpg') !important;
+	background:url('../img/bg.jpg') !important;
+}
+
+.ui-body-c, .ui-overlay-c{
+	text-shadow:none;
 }
 
 #app {

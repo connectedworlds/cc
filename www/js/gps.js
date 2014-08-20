@@ -174,7 +174,7 @@ function gpsSendingTimeOut(doSync)
 			dataType : 'json',
 			data: gpsAjaxDataToSend			
 		}).done(function(response) {
-			// console.log(response.storedgps);
+			console.log('done');
 			for (i = 0; i < response.storedgps.length; i++) {
 				delete (tmpgpsData[response.storedgps[i]]);
 			}
@@ -193,8 +193,9 @@ function gpsSendingTimeOut(doSync)
 			// console.log(tmpgpsData);
 		}).fail(function(response) {
 			console.log("send failed : ",response);
+			gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, gst);
 		});
-		
+		return;
 	}
 }
 

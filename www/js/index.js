@@ -270,7 +270,7 @@ function cancelNotification()
 if(navigator.platform !== 'Win32') {		
 	console.log = function(message) {
 		$('#debugDiv').prepend('<p data-log="'+$("#debugDiv p").length+'">' + message + '</p>');
-		if($("#debugDiv p").length > 30){
+		if($("#debugDiv p").length > 10){
 			$("#debugDiv p")[($("#debugDiv p").length)-1].remove();
 		}
 	};
