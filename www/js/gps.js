@@ -124,7 +124,7 @@ function gpsSendingTimeOut(doSync)
 	var gpsAjaxDataToSend = {};
 	gpsAjaxDataToSend.gps = {};
 	$('.icon-loop').addClass('loader');
-	
+	console.log('Sending Data');
 	if(tmpgpsData === null) {
 		console.log("No data stored in local storage");
 		return;
@@ -138,7 +138,7 @@ function gpsSendingTimeOut(doSync)
 			j = keys.length;
 		}
 		
-		console.log('Sending Data');
+		
 		
 		for (i = 0; i < j; i++) {
 			var k = keys[i];
