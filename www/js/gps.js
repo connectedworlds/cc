@@ -138,14 +138,12 @@ function gpsSendingTimeOut(doSync)
 			j = keys.length;
 		}
 		
-		
-		
 		for (i = 0; i < j; i++) {
 			var k = keys[i];
 			if(k !== 'undefined' && k !== null) {
 				if(typeof tmpgpsData[k].auth !== 'undefined' && tmpgpsData[k].auth !== null && tmpgpsData[k].auth !== '') {
 					var a = tmpgpsData[k].auth;
-					//console.log('-'+tmpgpsData[k].auth+'-');
+					console.log('-'+tmpgpsData[k].auth+'-');
 				} else if (storedAuth !== null) {
 					var a = storedAuth;
 					console.log("using stored auth");
@@ -169,6 +167,7 @@ function gpsSendingTimeOut(doSync)
 		gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
 		console.log(gpsAjaxDataToSend);
 		var gst = getGpsSendingtime();
+		gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, gst);
 		
 		$.ajax("http://www.coachclick.co.uk/app/track.php", {
 			type: "POST",
@@ -185,16 +184,16 @@ function gpsSendingTimeOut(doSync)
 			var toSync = checkUnsent();
 			
 			if(doSync === true && toSync === 0 && isTracking == false) {
+				window.clearTimeout(gps.sendingTimer);
 				console.log('Sync Complete');
 			} else {
-				gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, gst);
 				console.log('Upload Complete - '+gst);
 			}
 			$('.icon-loop').removeClass('loader');
 			// console.log(tmpgpsData);
 		}).fail(function(response) {
 			console.log("send failed : ",response);
-			gps.sendingTimer = window.setTimeout(function(){ gpsSendingTimeOut(doSync)}, gst);
+
 		});
 		return;
 	}
