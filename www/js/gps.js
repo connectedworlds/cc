@@ -168,13 +168,14 @@ function gpsSendingTimeOut(doSync)
 		
 		gpsAjaxDataToSend = JSON.stringify(gpsAjaxDataToSend);
 		console.log(gpsAjaxDataToSend);
+		var gst = getGpsSendingtime();
 		
 		$.ajax("http://www.coachclick.co.uk/app/track.php", {
 			type: "POST",
 			dataType : 'json',
 			data: gpsAjaxDataToSend			
 		}).done(function(response) {
-			console.log('done');
+			console.log('done - '+gst);
 			for (i = 0; i < response.storedgps.length; i++) {
 				delete (tmpgpsData[response.storedgps[i]]);
 			}
@@ -182,7 +183,7 @@ function gpsSendingTimeOut(doSync)
 		}).always(function(response) {
 			checkConnection();
 			var toSync = checkUnsent();
-			var gst = getGpsSendingtime();
+			
 			if(doSync === true && toSync === 0 && isTracking == false) {
 				console.log('Sync Complete');
 			} else {
