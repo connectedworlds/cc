@@ -152,6 +152,7 @@ $(function() {
     });
 	
 	$("#start-tracking").click(function() {
+		permanentStorage.removeItem("auth");
         gps.init();
     });
 	
