@@ -50,7 +50,7 @@ var app = {
     },
     initView: function() {
 		auth = permanentStorage.getItem("auth");
-        if (auth !== null) {
+        if (permanentStorage.getItem("loggedin") == true) {
             $('#email').val(permanentStorage.getItem("email"));
 			$('#password').val(permanentStorage.getItem("password"));
 			$('#logout-button').show();
@@ -222,6 +222,7 @@ app.serverSuccess = function(response) {
     {
         
 		permanentStorage.setItem("auth", response.auth);
+		permanentStorage.setItem("loggedin", true);
 		auth = response.auth;
 		
 		$('#logout-button').show();
@@ -236,11 +237,14 @@ app.serverSuccess = function(response) {
     {
 		permanentStorage.removeItem("auth");
 		permanentStorage.removeItem("email");
+		permanentStorage.removeItem("loggedin");
 		permanentStorage.removeItem("password");
 		$("#trackingPage").hide();
 		$("#settingsPage").show();
 		auth = '';
 		// alert(response.message);
+		$('#logout-button').hide();
+		$('#login-button').show();
 		$( "#loginIncorrect" ).text(response.message).popup( "open" );
     }
 };

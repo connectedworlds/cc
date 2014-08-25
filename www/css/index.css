@@ -44,6 +44,18 @@ body {
     width:100%;
 }
 
+/* ----- clearfix ----- */
+.cf:before,
+.cf:after {
+    content: "";
+    display: table;
+}
+
+input, textarea { outline: none; }
+
+.cf:after {
+    clear: both;
+}
 
 
 /* Portrait layout (default) */
@@ -170,8 +182,9 @@ top:-22px;
 	text-align:center;
 }
 
-#app, .ui-page {
-	background:url('../img/bg.jpg') !important;
+#app, .ui-page, #navbar, #footer, #header {
+	background:#347aad !important; 
+	/* background:url('../img/bg.jpg') !important; */
 }
 
 .ui-body-c, .ui-overlay-c{
