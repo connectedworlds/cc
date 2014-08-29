@@ -50,7 +50,7 @@ var app = {
     },
     initView: function() {
 		auth = permanentStorage.getItem("auth");
-        if (permanentStorage.getItem("loggedin") == true) {
+        if (permanentStorage.getItem("loggedin") == "true") {
             $('#email').val(permanentStorage.getItem("email"));
 			$('#password').val(permanentStorage.getItem("password"));
 			$('#logout-button').show();
@@ -172,6 +172,7 @@ $(function() {
 		permanentStorage.removeItem("email");
 		permanentStorage.removeItem("password");
 		permanentStorage.removeItem("auth");
+		permanentStorage.removeItem("loggedin");
 		console.log("Logout Button Clicked");
     });
 
