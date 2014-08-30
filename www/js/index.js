@@ -162,6 +162,7 @@ $(function() {
 	
     $("#login-button").click(function() {
         app.forcedSubmit = true; // forces pop-up
+		$("#login-button").text('Please wait....');
 		console.log("Login Button Clicked");
         app.doLogin();
     });
@@ -227,6 +228,7 @@ app.serverSuccess = function(response) {
 		auth = response.auth;
 		
 		$('#logout-button').show();
+		$("#login-button").text('Login');
 		$('#login-button').hide();
 		$("#settingsPage").hide();
 		$("#trackingPage").show();
@@ -245,14 +247,15 @@ app.serverSuccess = function(response) {
 		auth = '';
 		// alert(response.message);
 		$('#logout-button').hide();
+		$("#login-button").text('Login');
 		$('#login-button').show();
 		$( "#loginIncorrect" ).text(response.message).popup( "open" );
     }
 };
 app.serverError = function(request, errorType, errorMessage) {
-	$( "#loginIncorrect" ).popup( "open" );
-	$('#logout-button').show();
-	$('#login-button').hide();
+	$( "#loginIncorrect" ).text('Could not contact server, if you are sure your details are correct. Start tracking and we will keep trying to log you in.').popup( "open" );
+	$('#login-button').show();
+	$('#logout-button').hide();
 	$("#settingsPage").hide();
 	$("#trackingPage").show();
     console.log(errorMessage);
