@@ -162,7 +162,7 @@ $(function() {
 	
     $("#login-button").click(function() {
         app.forcedSubmit = true; // forces pop-up
-		$("#login-button").text('Please wait....');
+		$( "#login-button .ui-btn-text" ).text("Please wait...."); 
 		console.log("Login Button Clicked");
         app.doLogin();
     });
@@ -247,7 +247,7 @@ app.serverSuccess = function(response) {
 		auth = '';
 		// alert(response.message);
 		$('#logout-button').hide();
-		$("#login-button").text('Login');
+		$( "#login-button .ui-btn-text" ).text("Login"); 
 		$('#login-button').show();
 		$( "#loginIncorrect" ).text(response.message).popup( "open" );
     }
