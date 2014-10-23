@@ -12,7 +12,7 @@ var permanentStorage = window.localStorage;
 var connectionSpeed = '';
 var pc = false;
 var app = {
-    SERVER_LOGIN_URL: "https://www.coachclick.co.uk/app/login.php?go=1",
+    SERVER_LOGIN_URL: "http://www.coachclick.co.uk/app/login.php",
     HIGH_GPS_ACCURACY: true, // some emulators require true.
 	
     position: null,
