@@ -212,14 +212,15 @@ app.doLogin = function() {
 			result = false;
         }
     });
-	
+	console.log(app.SERVER_LOGIN_URL);
+	console.log(JSON.stringify(tempData));
 	console.log(permanentStorage);
 	return result;
 };
 
 app.serverSuccess = function(response) {
     response = JSON.parse(response);
-	// console.log(response);
+	console.log(response);
     if (response.status == 200)
     {
         
@@ -254,11 +255,12 @@ app.serverSuccess = function(response) {
 };
 app.serverError = function(request, errorType, errorMessage) {
 	$( "#loginIncorrect" ).text('Could not contact server, if you are sure your details are correct. Start tracking and we will keep trying to log you in.').popup( "open" );
-	$("#login-button").text('Login');
-	$('#login-button').show();
-	$('#logout-button').hide();
-	$("#settingsPage").hide();
-	$("#trackingPage").show();
+	$("#login-button  .ui-btn-text").text('Login');
+	// $('#login-button').show();
+	// $('#logout-button').hide();
+	// $("#settingsPage").hide();
+	// $("#trackingPage").show();
+    console.log(errorType);
     console.log(errorMessage);
 };
 
