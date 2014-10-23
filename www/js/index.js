@@ -12,7 +12,7 @@ var permanentStorage = window.localStorage;
 var connectionSpeed = '';
 var pc = false;
 var app = {
-    SERVER_LOGIN_URL: "http://www.coachclick.co.uk/app/login.php",
+    SERVER_LOGIN_URL: "https://www.coachclick.co.uk/app/login.php?go=1",
     HIGH_GPS_ACCURACY: true, // some emulators require true.
 	
     position: null,
@@ -254,6 +254,7 @@ app.serverSuccess = function(response) {
 };
 app.serverError = function(request, errorType, errorMessage) {
 	$( "#loginIncorrect" ).text('Could not contact server, if you are sure your details are correct. Start tracking and we will keep trying to log you in.').popup( "open" );
+	$("#login-button").text('Login');
 	$('#login-button').show();
 	$('#logout-button').hide();
 	$("#settingsPage").hide();
