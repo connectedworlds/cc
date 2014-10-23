@@ -199,7 +199,7 @@ app.doLogin = function() {
         device: deviceInfo
     };
     $.ajax(app.SERVER_LOGIN_URL, {
-        type: "POST",
+        type: "GET",
         data: JSON.stringify(tempData),
         success: function(response) {
             app.serverSuccess(response);
@@ -250,7 +250,7 @@ app.serverSuccess = function(response) {
 		$('#logout-button').hide();
 		$( "#login-button .ui-btn-text" ).text("Login"); 
 		$('#login-button').show();
-		$( "#loginIncorrect" ).text(response.message).popup( "open" );
+		$( "#loginIncorrect" ).text('Howdy').popup( "open" );
     }
 };
 app.serverError = function(request, errorType, errorMessage) {
