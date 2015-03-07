@@ -144,9 +144,9 @@ function gpsSendingTimeOut(doSync)
 				if(typeof tmpgpsData[k].auth !== 'undefined' && tmpgpsData[k].auth !== null && tmpgpsData[k].auth !== '') {
 					var a = tmpgpsData[k].auth;
 					console.log('-'+tmpgpsData[k].auth+'-');
-				} else if (storedAuth !== null) {
-					var a = storedAuth;
-					console.log("using stored auth");
+				// } else if (storedAuth !== null) {
+					//var a = storedAuth;
+				//	console.log("using stored auth");
 				} else {
 					console.log("login before send");
 					app.doLogin();

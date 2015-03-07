@@ -233,6 +233,7 @@ app.serverSuccess = function(response) {
 		$('#login-button').hide();
 		$("#settingsPage").hide();
 		$("#trackingPage").show();
+        $("#loginIncorrect").hide();
 		
         console.log("Login Success \n Auth : " + auth);
 		
