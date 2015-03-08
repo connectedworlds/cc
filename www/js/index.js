@@ -53,8 +53,8 @@ var app = {
         if (permanentStorage.getItem("loggedin") == "true") {
             $('#email').val(permanentStorage.getItem("email"));
 			$('#password').val(permanentStorage.getItem("password"));
-			$('#logout-button').show();
-			$('#login-button').hide();
+			 $('#loggedout').show();
+             $('#login-div').hide();
         } else {
 			$("#trackingPage").hide();
 			$("#settingsPage").show();
@@ -168,8 +168,8 @@ $(function() {
     });
 
     $("#logout-button").click(function() {
-        $('#logout-button').hide();
-		$('#login-button').show();
+        $('#loggedout').hide();
+        $('#login-div').show();
 		permanentStorage.removeItem("email");
 		permanentStorage.removeItem("password");
 		permanentStorage.removeItem("auth");
@@ -228,12 +228,15 @@ app.serverSuccess = function(response) {
 		permanentStorage.setItem("loggedin", true);
 		auth = response.auth;
 		
-		$('#logout-button').show();
+		// $('#logout-button').show();
 		$("#login-button").text('Login');
-		$('#login-button').hide();
+		//$('#login-button').hide();
+        $('#loggedout').show();
+        $('#login-div').hide();
 		$("#settingsPage").hide();
 		$("#trackingPage").show();
         $("#loginIncorrect").hide();
+        $("#loggedinemail").text(email);
 		
         console.log("Login Success \n Auth : " + auth);
 		
@@ -248,9 +251,11 @@ app.serverSuccess = function(response) {
 		$("#settingsPage").show();
 		auth = '';
 		// alert(response.message);
-		$('#logout-button').hide();
+		//$('#logout-button').hide();
 		$( "#login-button .ui-btn-text" ).text("Login"); 
-		$('#login-button').show();
+		//$('#login-button').show();
+        $('#loggedout').hide();
+        $('#login-div').show();
 		$( "#loginIncorrect" ).text(response.message).popup( "open" );
     }
 };

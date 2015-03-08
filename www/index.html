@@ -52,20 +52,26 @@
                             <input type="password" id="password" placeholder="Please Enter Password" value="" />
                         </div>
                         <a href="#" id="login-button" data-role="button" data-inline="true" >Login</a>
-						<a href="#" id="logout-button" style="display: none;" data-role="button" data-inline="true" >Logout</a>
+						
                     </div>
+                    
+                    <div id="loggedout">
+                        <h4>Logged In As <span id="loggedinemail"></span></h4>
+                        <a href="#" id="logout-button" data-role="button" data-inline="true" >Logout</a>
+                    </div>
+                    
 					<div data-role="popup" id="loginIncorrect" class="ui-content" data-theme="d">Incorrect Account Details</div>
 				 </div><!-- /content -->
             </div>
 
-            <!-- /page -->
+            <!-- /page 
 			<div id="logPage" class="content_div">
                 <div data-role="content" >
                     <div id="debugDiv">
                     </div>
                 </div>
             </div>
-			 
+            -->
 			
             <div id="privacyPage" class="content_div">
 				<div data-role="content" >
@@ -82,7 +88,7 @@
                     <ul>
                         <li><a id="trackingButton" href="#" data-href="trackingPage" data-icon="nb-status" class="ui-btn-active">Tracking</a></li>
                         <li><a id="settingsButton" href="#" data-href="settingsPage" data-icon="nb-settings" >Settings</a></li>
-						<li><a id="logButton" href="#" data-href="logPage" data-icon="nb-settings">Debug</a></li>
+						<!-- <li><a id="logButton" href="#" data-href="logPage" data-icon="nb-settings">Debug</a></li> -->
                         <li><a id="privacyButton" href="#" data-href="privacyPage" data-icon="nb-privacy">About</a></li>
                     </ul>
                 </div><!-- /navbar -->

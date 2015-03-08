@@ -232,6 +232,10 @@ display:none;
 
 }
 
+#loggedout{
+    display:none;
+}
+
 /* App Icons */
 #navbar .ui-icon {
 width: 30px!important;
