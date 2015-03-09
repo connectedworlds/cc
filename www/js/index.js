@@ -127,10 +127,6 @@ function checkUnsent() {
 }
 
 function onDeviceReady() {
-    window.plugin.backgroundMode.enable();
-    window.plugins.backgroundMode.configure({
-        silent: true
-    })
     navigator.splashscreen.hide();
     checkConnection();
 	checkUnsent();
@@ -157,10 +153,16 @@ $(function() {
 	$("#start-tracking").click(function() {
 		app.doLogin();
         gps.init();
+        window.plugin.backgroundMode.setDefaults({ text:'Tracking...'});
+        window.plugin.backgroundMode.enable();
+        window.plugin.backgroundMode.configure({
+            silent: true
+        })
     });
 	
 	$("#stop-tracking").click(function() {
         gps.stop();
+        window.plugin.backgroundMode.disable();
     });
 	
     $("#login-button").click(function() {
