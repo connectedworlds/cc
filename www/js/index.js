@@ -128,6 +128,9 @@ function checkUnsent() {
 
 function onDeviceReady() {
     window.plugin.backgroundMode.enable();
+    window.plugins.backgroundMode.configure({
+        silent: true
+    })
     navigator.splashscreen.hide();
     checkConnection();
 	checkUnsent();
