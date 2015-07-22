@@ -4,45 +4,45 @@
         <title>GPS Tracking | Coach Click</title>
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
-		<meta name="viewport" 		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densitydpi=medium-dpi, user-scalable=0" />		
+        <meta name="viewport" 		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densitydpi=medium-dpi, user-scalable=0" />		
         <link rel="stylesheet"  href="css/themes/default/jquery.mobile-1.3.2.min.css">
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <link rel="stylesheet" type="text/css" href="css/loading.css" />
     </head>
     <body>
         <div id="app">
-			<div id="header" class="cf" data-role="header" data-position="fixed" data-tap-toggle="false">
-				<img src="img/logo.png" width="300" id="logo"/>
+            <div id="header" class="cf" data-role="header" data-position="fixed" data-tap-toggle="false">
+                <img src="img/logo.png" width="300" id="logo"/>
             </div>
-			
+
             <div  id="trackingPage" class="content_div">
                 <div data-role="content">
                     <div id="track-div" >
                         <a href="#" id="start-tracking" data-role="button" data-inline="true" >Start Tracking</a>
                         <a href="#" id="stop-tracking" style="display: none;" data-role="button" data-inline="true" >Stop Tracking</a>
                     </div>
-					<ul id="infocons">
-						<li>
-							<span class="icomoon icon-connection"></span><br />
-							<span id="connectionType">...</span>
-						</li>
-						<li>
-							<span class="icomoon icon-loop"></span><br />
-							<span id="gpsUnsent">...</span>
-						</li>
-						<li>
-							<span class="icomoon icon-uniE603"></span><br />
-							<span id="batterylevel">...</span>
-						</li>
-					</ul>
-					<a data-role="button" data-inline="true" href="#" id="syncnow" style="display: none;">Sync Now</a>
-					
+                    <ul id="infocons">
+                        <li>
+                            <span class="icomoon icon-connection"></span><br />
+                            <span id="connectionType">...</span>
+                        </li>
+                        <li>
+                            <span class="icomoon icon-loop"></span><br />
+                            <span id="gpsUnsent">...</span>
+                        </li>
+                        <li>
+                            <span class="icomoon icon-uniE603"></span><br />
+                            <span id="batterylevel">...</span>
+                        </li>
+                    </ul>
+                    <a data-role="button" data-inline="true" href="#" id="syncnow" style="display: none;">Sync Now</a>
+
                 </div>
             </div><!-- /page  -->
-			
-			<div id="settingsPage" class="content_div">
-				<div data-role="content" >
-					<div id="login-div">
+
+            <div id="settingsPage" class="content_div">
+                <div data-role="content" >
+                    <div id="login-div">
                         <div id="forEmail">
                             <label>Email</label>
                             <input type="text" id="email" placeholder="Please Enter Email" value="" />
@@ -52,34 +52,34 @@
                             <input type="password" id="password" placeholder="Please Enter Password" value="" />
                         </div>
                         <a href="#" id="login-button" data-role="button" data-inline="true" >Login</a>
-						
+
                     </div>
-                    
+
                     <div id="loggedout">
                         <h4>Logged In As <span id="loggedinemail"></span></h4>
                         <a href="#" id="logout-button" data-role="button" data-inline="true" >Logout</a>
                     </div>
-                    
-					<div data-role="popup" id="loginIncorrect" class="ui-content" data-theme="d">Incorrect Account Details</div>
-				 </div><!-- /content -->
+
+                    <div data-role="popup" id="loginIncorrect" class="ui-content" data-theme="d">Incorrect Account Details</div>
+                </div><!-- /content -->
             </div>
 
             <!-- /page 
-			<div id="logPage" class="content_div">
+                        <div id="logPage" class="content_div">
                 <div data-role="content" >
                     <div id="debugDiv">
                     </div>
                 </div>
             </div>
             -->
-			
+
             <div id="privacyPage" class="content_div">
-				<div data-role="content" >
+                <div data-role="content" >
                     <div id="logos">
                         <p style="text-align: center">Developed By <br> <h1>Coach Click</h1></p>
-						<p>This app is for use by members of the website coachclick.co.uk</p>
-						<p>While tracking, this app will continually send information about your location and device to the coachclick servers</p>
-						<p><strong>No data is recorded or sent to us while it is not in tracking mode</strong></p>
+                        <p>This app is for use by members of the website coachclick.co.uk</p>
+                        <p>While tracking, this app will continually send information about your location and device to the coachclick servers</p>
+                        <p><strong>No data is recorded or sent to us while it is not in tracking mode</strong></p>
                     </div>
                 </div><!-- /content -->
             </div><!-- /page  -->
@@ -88,7 +88,7 @@
                     <ul>
                         <li><a id="trackingButton" href="#" data-href="trackingPage" data-icon="nb-status" class="ui-btn-active">Tracking</a></li>
                         <li><a id="settingsButton" href="#" data-href="settingsPage" data-icon="nb-settings" >Settings</a></li>
-						<!-- <li><a id="logButton" href="#" data-href="logPage" data-icon="nb-settings">Debug</a></li> -->
+                        <!-- <li><a id="logButton" href="#" data-href="logPage" data-icon="nb-settings">Debug</a></li> -->
                         <li><a id="privacyButton" href="#" data-href="privacyPage" data-icon="nb-privacy">About</a></li>
                     </ul>
                 </div><!-- /navbar -->
@@ -103,9 +103,9 @@
         <!-- note: index.js must be first because it initializes app object literal -->
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/gps.js"></script>
-       
-	   <script type="text/javascript">
-		app.initialize();
+
+        <script type="text/javascript">
+            app.initialize();
         </script>
     </body>
 </html>

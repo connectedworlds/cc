@@ -8,33 +8,32 @@ deviceInfo = {
 };
 var isTracking;
 var auth;
-var permanentStorage = window.localStorage;	
+var permanentStorage = window.localStorage;
 var connectionSpeed = '';
 var pc = false;
 var app = {
     SERVER_LOGIN_URL: "http://www.coachclick.co.uk/app/login.php",
     HIGH_GPS_ACCURACY: true, // some emulators require true.
-	
+
     position: null,
     deviceId: 0,
     password: '',
-	email: '',
+    email: '',
     timeLastSubmit: 0,
-    forcedSubmit: false, 
-
+    forcedSubmit: false,
     // Application Constructor
     initialize: function() {
         this.bindEvents();
         this.initFastClick();
         this.initUserId();
         this.initView();
-		checkConnection();
-		checkUnsent();
+        checkConnection();
+        checkUnsent();
         app.timeLastSubmit = (new Date().getTime() / 1000) - 60;
-		// console.log(permanentStorage);
+        // console.log(permanentStorage);
     },
     bindEvents: function() {
-       
+
     },
     initFastClick: function() {
         window.addEventListener('load', function() {
@@ -49,19 +48,19 @@ var app = {
         }
     },
     initView: function() {
-		auth = permanentStorage.getItem("auth");
+        auth = permanentStorage.getItem("auth");
         if (permanentStorage.getItem("loggedin") == "true") {
             $('#email').val(permanentStorage.getItem("email"));
-			$('#password').val(permanentStorage.getItem("password"));
-			 $('#loggedout').show();
-             $('#login-div').hide();
+            $('#password').val(permanentStorage.getItem("password"));
+            $('#loggedout').show();
+            $('#login-div').hide();
         } else {
-			$("#trackingPage").hide();
-			$("#settingsPage").show();
-			auth = '';
-		}
-		// console.log(auth);
-		// permanentStorage.removeItem("gpsData")
+            $("#trackingPage").hide();
+            $("#settingsPage").show();
+            auth = '';
+        }
+        // console.log(auth);
+        // permanentStorage.removeItem("gpsData")
     },
     getReadableTime: function(time) {
         var hours = time.getHours();
@@ -79,64 +78,116 @@ var app = {
 
 function checkConnection() {
 
-	if(navigator.platform !== 'Win32') {
-		var networkState = navigator.connection.type;
-		var states = {};
-		states[Connection.UNKNOWN] = 'Unknown';
-		states[Connection.ETHERNET] = 'Ethernet';
-		states[Connection.WIFI] = 'WiFi';
-		states[Connection.CELL_2G] = 'Cell 2G';
-		states[Connection.CELL_3G] = 'Cell 3G';
-		states[Connection.CELL_4G] = 'Cell 4G';
-		states[Connection.CELL] = 'Cell';
-		states[Connection.NONE] = 'No';
+    if (navigator.platform !== 'Win32') {
+        var networkState = navigator.connection.type;
+        var states = {};
+        states[Connection.UNKNOWN] = 'Unknown';
+        states[Connection.ETHERNET] = 'Ethernet';
+        states[Connection.WIFI] = 'WiFi';
+        states[Connection.CELL_2G] = 'Cell 2G';
+        states[Connection.CELL_3G] = 'Cell 3G';
+        states[Connection.CELL_4G] = 'Cell 4G';
+        states[Connection.CELL] = 'Cell';
+        states[Connection.NONE] = 'No';
 
-		connectionSpeed = states[networkState];
-		$('#connectionType').text(states[networkState]);
-		
-	} else {
-		pc = true;
-		$('#connectionType').text('PC');
-		connectionSpeed = 'Ethernet';
-	}
-	
-	console.log('Connection '+connectionSpeed);
-	
+        connectionSpeed = states[networkState];
+        $('#connectionType').text(states[networkState]);
+
+    } else {
+        pc = true;
+        $('#connectionType').text('PC');
+        connectionSpeed = 'Ethernet';
+    }
+
+    console.log('Connection ' + connectionSpeed);
+
 }
 
 function checkUnsent() {
-	$('#syncnow').hide();
-	var tmpgpsData = permanentStorage.getItem("gpsData");
-	tmpgpsData = JSON.parse(tmpgpsData);
-	var synctext = 'Synced';
-	var tosync = 0;
-	if(typeof tmpgpsData === 'object' && tmpgpsData !== null) {
-		var keys = Object.keys(tmpgpsData);
-		
-		if(keys.length > 0) {
-			synctext = keys.length;
-			tosync = keys.length;
-			if(isTracking != true) {
-				$('#syncnow').show();
-			}
-		}
-	}
-	$('#gpsUnsent').text(synctext);
-	console.log('Unsent '+synctext);
-	return tosync;
+    $('#syncnow').hide();
+    var tmpgpsData = permanentStorage.getItem("gpsData");
+    tmpgpsData = JSON.parse(tmpgpsData);
+    var synctext = 'Synced';
+    var tosync = 0;
+    if (typeof tmpgpsData === 'object' && tmpgpsData !== null) {
+        var keys = Object.keys(tmpgpsData);
+
+        if (keys.length > 0) {
+            synctext = keys.length;
+            tosync = keys.length;
+            if (isTracking != true) {
+                $('#syncnow').show();
+            }
+        }
+    }
+    $('#gpsUnsent').text(synctext);
+    console.log('Unsent ' + synctext);
+    return tosync;
 }
 
 function onDeviceReady() {
+    console.log('test deviceReady 1.');
     navigator.splashscreen.hide();
     checkConnection();
-	checkUnsent();
+    checkUnsent();
     deviceInfo.name = device.name;
     deviceInfo.cordova = device.cordova;
     deviceInfo.platform = device.platform;
     deviceInfo.uuid = device.uuid;
     deviceInfo.model = device.model;
     deviceInfo.version = device.version;
-	window.addEventListener("batterystatus", onBatteryStatus, false);
+    window.addEventListener("batterystatus", onBatteryStatus, false);
+    console.log('test deviceReady 2.');
+    fgGeo = window.navigator.geolocation;
+    console.log('test deviceReady 3.');
+    bgGeo = window.plugins.backgroundGeoLocation;
+    console.log('test deviceReady 4.');
+
+    // BackgroundGeoLocation is highly configurable.
+    console.log("test bggeo type " + (typeof bgGeo));
+    console.log("test bggeo : " + JSON.stringify(bgGeo));
+    bgGeo.configure(callbackFn, failureFn, {});
+    console.log('test deviceReady 5.');
+
+    // Only ios emits this stationary event
+    bgGeo.onStationary(function(location) {
+        /*
+         if (!app.stationaryRadius) {
+         app.stationaryRadius = new google.maps.Circle({
+         fillColor: '#cc0000',
+         fillOpacity: 0.4,
+         strokeOpacity: 0,
+         map: app.map
+         });
+         }
+         var radius = (location.accuracy < location.radius) ? location.radius : location.accuracy;
+         var center = new google.maps.LatLng(location.latitude, location.longitude);
+         app.stationaryRadius.setRadius(radius);
+         app.stationaryRadius.setCenter(center);
+         */
+    });
+
+    function yourAjaxCallback(response) {
+        console.log('test yourAjaxCallback ')
+        bgGeo.finish();
+    }
+
+    function callbackFn(location) {
+        console.log('test BackgroundGeoLocation callback:  ' + location.latitude + ',' + location.longitude);
+
+        // Update our current-position marker.
+        // app.setCurrentLocation(location);
+
+        // After you Ajax callback is complete, you MUST signal to the native code, which is running a background-thread, that you're done and it can gracefully kill that thread.
+        yourAjaxCallback.call(this);
+    }
+
+    function failureFn(error) {
+        console.log('test BackgroundGeoLocation error');
+    }
+
+    console.log('test deviceReady complete.');
+
 }
 
 document.addEventListener('deviceready', onDeviceReady, false);
@@ -146,40 +197,42 @@ $(function() {
 
     $("#syncnow").click(function() {
         gps.sync();
-		$("#syncnow").hide();
-		$('.icon-loop').addClass('loader');
+        $("#syncnow").hide();
+        $('.icon-loop').addClass('loader');
     });
-	
-	$("#start-tracking").click(function() {
-		app.doLogin();
+
+    $("#start-tracking").click(function() {
+        app.doLogin();
         gps.init();
-        window.plugin.backgroundMode.setDefaults({ text:'Tracking...'});
-        window.plugin.backgroundMode.enable();
-        window.plugin.backgroundMode.configure({
-            silent: true
-        })
+        bgGeo.start();
+//        window.plugin.backgroundMode.setDefaults({text: 'Tracking...'});
+//        window.plugin.backgroundMode.enable();
+//        window.plugin.backgroundMode.configure({
+//            silent: true
+//        })
     });
-	
-	$("#stop-tracking").click(function() {
+
+    $("#stop-tracking").click(function() {
         gps.stop();
-        window.plugin.backgroundMode.disable();
+        bgGeo.stop();
+//        window.plugin.backgroundMode.disable();
     });
-	
+
     $("#login-button").click(function() {
         app.forcedSubmit = true; // forces pop-up
-		$( "#login-button .ui-btn-text" ).text("Please wait...."); 
-		console.log("Login Button Clicked");
+        $("#login-button .ui-btn-text").text("Please wait....");
+        console.log("Login Button Clicked");
         app.doLogin();
     });
 
     $("#logout-button").click(function() {
         $('#loggedout').hide();
         $('#login-div').show();
-		permanentStorage.removeItem("email");
-		permanentStorage.removeItem("password");
-		permanentStorage.removeItem("auth");
-		permanentStorage.removeItem("loggedin");
-		console.log("Logout Button Clicked");
+        permanentStorage.removeItem("email");
+        permanentStorage.removeItem("password");
+        permanentStorage.removeItem("auth");
+        permanentStorage.removeItem("loggedin");
+        console.log("Logout Button Clicked");
     });
 
     $(document).delegate('.ui-navbar a', 'click', function() {
@@ -193,10 +246,10 @@ $(function() {
 app.doLogin = function() {
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
-	var result;
+    var result;
     app.timeLastSubmit = new Date().getTime() / 1000;
-	permanentStorage.setItem("email", email);
-	permanentStorage.setItem("password", password);
+    permanentStorage.setItem("email", email);
+    permanentStorage.setItem("password", password);
     checkConnection();
     var tempData = {
         email: email,
@@ -208,94 +261,94 @@ app.doLogin = function() {
         data: JSON.stringify(tempData),
         success: function(response) {
             app.serverSuccess(response);
-			console.log("Login AJAX Success" + response);
-			result = true;
+            console.log("Login AJAX Success" + response);
+            result = true;
         },
         error: function(request, errorType, errorMessage) {
             app.serverError(request, errorType, errorMessage);
-			console.log("Login AJAX Failed" + response);
-			result = false;
+            console.log("Login AJAX Failed" + response);
+            result = false;
         }
     });
-	console.log(app.SERVER_LOGIN_URL);
-	console.log(JSON.stringify(tempData));
-	console.log(permanentStorage);
-	return result;
+    console.log(app.SERVER_LOGIN_URL);
+    console.log(JSON.stringify(tempData));
+    console.log(permanentStorage);
+    return result;
 };
 
 app.serverSuccess = function(response) {
     response = JSON.parse(response);
-	console.log(response);
+    console.log(response);
     if (response.status == 200)
     {
-        
-		permanentStorage.setItem("auth", response.auth);
-		permanentStorage.setItem("loggedin", true);
-		auth = response.auth;
-		
-		// $('#logout-button').show();
-		$("#login-button").text('Login');
-		//$('#login-button').hide();
+
+        permanentStorage.setItem("auth", response.auth);
+        permanentStorage.setItem("loggedin", true);
+        auth = response.auth;
+
+        // $('#logout-button').show();
+        $("#login-button").text('Login');
+        //$('#login-button').hide();
         $('#loggedout').show();
         $('#login-div').hide();
-		$("#settingsPage").hide();
-		$("#trackingPage").show();
+        $("#settingsPage").hide();
+        $("#trackingPage").show();
         $("#loginIncorrect").hide();
         $("#loggedinemail").text(email);
-		
+
         console.log("Login Success \n Auth : " + auth);
-		
+
     }
     else
     {
-		permanentStorage.removeItem("auth");
-		permanentStorage.removeItem("email");
-		permanentStorage.removeItem("loggedin");
-		permanentStorage.removeItem("password");
-		$("#trackingPage").hide();
-		$("#settingsPage").show();
-		auth = '';
-		// alert(response.message);
-		//$('#logout-button').hide();
-		$( "#login-button .ui-btn-text" ).text("Login"); 
-		//$('#login-button').show();
+        permanentStorage.removeItem("auth");
+        permanentStorage.removeItem("email");
+        permanentStorage.removeItem("loggedin");
+        permanentStorage.removeItem("password");
+        $("#trackingPage").hide();
+        $("#settingsPage").show();
+        auth = '';
+        // alert(response.message);
+        //$('#logout-button').hide();
+        $("#login-button .ui-btn-text").text("Login");
+        //$('#login-button').show();
         $('#loggedout').hide();
         $('#login-div').show();
-		$( "#loginIncorrect" ).text(response.message).popup( "open" );
+        $("#loginIncorrect").text(response.message).popup("open");
     }
 };
 app.serverError = function(request, errorType, errorMessage) {
-	$( "#loginIncorrect" ).text('Could not contact server, if you are sure your details are correct. Start tracking and we will keep trying to log you in.').popup( "open" );
-	$("#login-button  .ui-btn-text").text('Login');
-	// $('#login-button').show();
-	// $('#logout-button').hide();
-	// $("#settingsPage").hide();
-	// $("#trackingPage").show();
+    $("#loginIncorrect").text('Could not contact server, if you are sure your details are correct. Start tracking and we will keep trying to log you in.').popup("open");
+    $("#login-button  .ui-btn-text").text('Login');
+    // $('#login-button').show();
+    // $('#logout-button').hide();
+    // $("#settingsPage").hide();
+    // $("#trackingPage").show();
     console.log(errorType);
     console.log(errorMessage);
 };
 
 function showNotification()
 {
-    if(!pc){
-		window.plugin.notification.local.add({id: "11111", title: "Coach Click Tracking App", message: 'Tracking In Progress', ongoing: true});
-	}
+    if (!pc) {
+        window.plugin.notification.local.add({id: "11111", title: "Coach Click Tracking App", message: 'Tracking In Progress', ongoing: true});
+    }
 }
 function cancelNotification()
 {
-	if(!pc){
-		window.plugin.notification.local.cancel("11111", function() {
-			console.log("Notification Closed");
-		});
-	}
+    if (!pc) {
+        window.plugin.notification.local.cancel("11111", function() {
+            console.log("Notification Closed");
+        });
+    }
 }
 
-if(navigator.platform !== 'Win32') {		
-	console.log = function(message) {
-		$('#debugDiv').prepend('<p data-log="'+$("#debugDiv p").length+'">' + message + '</p>');
-		if($("#debugDiv p").length > 10){
-			$("#debugDiv p")[($("#debugDiv p").length)-1].remove();
-		}
-	};
-	console.error = console.debug = console.info =  console.log
+if (navigator.platform !== 'Win32') {
+    console.log = function(message) {
+        $('#debugDiv').prepend('<p data-log="' + $("#debugDiv p").length + '">' + message + '</p>');
+        if ($("#debugDiv p").length > 10) {
+            $("#debugDiv p")[($("#debugDiv p").length) - 1].remove();
+        }
+    };
+    console.error = console.debug = console.info = console.log
 }
